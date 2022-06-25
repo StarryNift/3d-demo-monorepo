@@ -1,13 +1,21 @@
-# Editor configuration, see http://editorconfig.org
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
 root = true
 
-[*]
-charset = utf-8
+# 4 space indentation
+[*.{tsx,jsx}]
 indent_style = space
 indent_size = 2
-insert_final_newline = true
-trim_trailing_whitespace = true
 
-[*.md]
-max_line_length = off
-trim_trailing_whitespace = false
+[*.{ts,js}]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
+[*.proto]
+indent_style = space
+indent_size = 2
