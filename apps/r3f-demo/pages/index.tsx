@@ -29,6 +29,11 @@ export function Index() {
           Physics: Constant Velocity
         </Link>
       </p>
+      <p>
+        <Link href="/xstate/character-state">
+          XState: Character State Machine
+        </Link>
+      </p>
     </div>
   );
 }

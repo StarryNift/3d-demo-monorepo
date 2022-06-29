@@ -25,6 +25,8 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
   '@welldone-software/why-did-you-render': ^7.0.1
+  '@xstate/inspect': ^0.7.0
+  '@xstate/react': ^3.0.0
   babel-jest: 27.5.1
   babel-plugin-styled-components: 1.10.7
   cannon-es: ^0.19.0
@@ -59,13 +61,18 @@ specifiers:
   tslib: ^2.3.0
   typescript: ~4.7.2
   webpack: ^4.0.0 || ^5.0.0
+  ws: ^8.0.0
+  xstate: ^4.32.1
   zustand: 4.0.0-rc.1
 
 dependencies:
   '@fluentui/react-hooks': 8.6.0_wlff343ihbuq5ksmlrv2tytkq4
   '@nrwl/next': 14.3.6_hezuy7cuoyccfus37is3q5pone
+  '@react-three/cannon': 6.3.0_jenhxabyi2axa73l7pib4nxxoe
   '@react-three/drei': 9.14.3_oljxl432in6q5qxjmnckewj7rq
   '@react-three/fiber': 8.0.27_jvurxncug65yh22s5p4pqgaif4
+  '@xstate/inspect': 0.7.0_ws@8.8.0+xstate@4.32.1
+  '@xstate/react': 3.0.0_4xxk6e2s25rrfwh5blh4bw4r44
   cannon-es: 0.19.0
   core-js: 3.23.2
   default-passive-events: 2.0.0
@@ -80,7 +87,9 @@ dependencies:
   react-three-third-person: 0.4.4_idpqelmnnsgojcrvn2t7iyysma
   regenerator-runtime: 0.13.7
   styled-components: 5.3.5_7i5myeigehqah43i5u7wbekgba
+  three: 0.141.0
   tslib: 2.4.0
+  xstate: 4.32.1
   zustand: 4.0.0-rc.1_react@18.2.0
 
 devDependencies:
@@ -91,7 +100,6 @@ devDependencies:
   '@nrwl/react': 14.3.6_nvzuxafsdawfgwd3764cqflive
   '@nrwl/web': 14.3.6_bpvwuyehyfyxyxtlyug6uwqzqq
   '@nrwl/workspace': 14.3.6_zd3pqvy5jrq2fjtj3fbvwaxgtu
-  '@react-three/cannon': 6.3.0_jenhxabyi2axa73l7pib4nxxoe
   '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
   '@types/jest': 27.4.1
   '@types/lodash': 4.14.182
@@ -118,11 +126,11 @@ devDependencies:
   nx: 14.3.6
   prettier: 2.7.1
   react-test-renderer: 18.2.0_react@18.2.0
-  three: 0.141.0
   ts-jest: 27.1.4_qwg7kowheam2r5bseyl2rsihyq
   ts-node: 10.8.1_qiyc72axg2v44xl4yovan2v55u
   typescript: 4.7.4
   webpack: 5.73.0
+  ws: 8.8.0
 
 packages:
 
@@ -2516,7 +2524,7 @@ packages:
       three: '>=0.139'
     dependencies:
       three: 0.141.0
-    dev: true
+    dev: false
 
   /@radix-ui/popper/0.1.0:
     resolution: {integrity: sha512-uzYeElL3w7SeNMuQpXiFlBhTT+JyaNMCwDfjKkrzugEcYrf5n52PHqncNdQPUtR42hJh8V9FsqyEDbDxkeNjJQ==}
@@ -2906,7 +2914,7 @@ packages:
       three: 0.141.0
     transitivePeerDependencies:
       - typescript
-    dev: true
+    dev: false
 
   /@react-three/drei/9.14.3_oljxl432in6q5qxjmnckewj7rq:
     resolution: {integrity: sha512-0sL8z/VZno/y8lamzMuRFdYoAaRHMWuo3//Jhtuni9FSRsGCh95ZLdfYTxsTvlgf8EQBvU1cf7ESxHyoRSm5ww==}
@@ -3813,6 +3821,43 @@ packages:
       react: 18.2.0
     dev: true
 
+  /@xstate/inspect/0.7.0_ws@8.8.0+xstate@4.32.1:
+    resolution: {integrity: sha512-3wrTf8TfBYprH1gBFdxmOQUBDpBazlICWvGdFzr8IHFL4MbiexEZdAsL2QC/WAmW9BqNYTWTwgfbvKHKg+FrlA==}
+    peerDependencies:
+      '@types/ws': ^8.0.0
+      ws: ^8.0.0
+      xstate: ^4.32.0
+    peerDependenciesMeta:
+      '@types/ws':
+        optional: true
+    dependencies:
+      fast-safe-stringify: 2.1.1
+      ws: 8.8.0
+      xstate: 4.32.1
+    dev: false
+
+  /@xstate/react/3.0.0_4xxk6e2s25rrfwh5blh4bw4r44:
+    resolution: {integrity: sha512-KHSCfwtb8gZ7QH2luihvmKYI+0lcdHQOmGNRUxUEs4zVgaJCyd8csCEmwPsudpliLdUmyxX2pzUBojFkINpotw==}
+    peerDependencies:
+      '@xstate/fsm': ^2.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^18.2.0
+      xstate: ^4.31.0
+    peerDependenciesMeta:
+      '@xstate/fsm':
+        optional: true
+      react:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      use-isomorphic-layout-effect: 1.1.2_wlff343ihbuq5ksmlrv2tytkq4
+      use-sync-external-store: 1.1.0_react@18.2.0
+      xstate: 4.32.1
+    transitivePeerDependencies:
+      - '@types/react'
+    dev: false
+
   /@xtuc/ieee754/1.2.0:
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
 
@@ -4504,10 +4549,11 @@ packages:
       cannon-es: 0.19.0
       three: 0.141.0
       typescript: 4.7.4
-    dev: true
+    dev: false
 
   /cannon-es/0.19.0:
     resolution: {integrity: sha512-fu9UXrjFmAQXq3JyBVPbtyc53suX+QHzikZEJykxroVNnIx1xHq0jZenK8qwhdwbBAtDL9n/47TyPELuSQwZuA==}
+    dev: false
 
   /caseless/0.12.0:
     resolution: {integrity: sha512-4tYFyifaFfGacoiObjJegolkwSU4xQNGbVgUiNYVUxbQ2x2lUsFvY4hVgVzGiIe6WLOPqycWXA40l+PWsxthUw==}
@@ -6022,6 +6068,10 @@ packages:
 
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
+
+  /fast-safe-stringify/2.1.1:
+    resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+    dev: false
 
   /fastq/1.13.0:
     resolution: {integrity: sha512-YpkpUnK8od0o1hmeSc7UUs/eB/vIPWJYjKck2QKIzAf71Vm1AAQ3EbuZB3g2JIy+pg+ERD0vqI79KyZiB2e2Nw==}
@@ -10181,7 +10231,7 @@ packages:
 
   /three/0.141.0:
     resolution: {integrity: sha512-JaSDAPWuk4RTzG5BYRQm8YZbERUxTfTDVouWgHMisS2to4E5fotMS9F2zPFNOIJyEFTTQDDKPpsgZVThKU3pXA==}
-    dev: true
+    dev: false
 
   /throat/6.0.1:
     resolution: {integrity: sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==}
@@ -10536,6 +10586,21 @@ packages:
       schema-utils: 3.1.1
       webpack: 5.73.0
 
+  /use-isomorphic-layout-effect/1.1.2_wlff343ihbuq5ksmlrv2tytkq4:
+    resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^18.2.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.0.13
+      react: 18.2.0
+    dev: false
+
   /use-sync-external-store/1.1.0_react@18.2.0:
     resolution: {integrity: sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==}
     peerDependencies:
@@ -10884,6 +10949,10 @@ packages:
 
   /xmlchars/2.2.0:
     resolution: {integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==}
+
+  /xstate/4.32.1:
+    resolution: {integrity: sha512-QYUd+3GkXZ8i6qdixnOn28bL3EvA++LONYL/EMWwKlFSh/hiLndJ8YTnz77FDs+JUXcwU7NZJg7qoezoRHc4GQ==}
+    dev: false
 
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
