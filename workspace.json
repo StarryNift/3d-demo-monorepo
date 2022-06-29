@@ -2,6 +2,8 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
-    "r3f-demo": "apps/r3f-demo"
+    "physic-material": "libs/physic-material",
+    "r3f-demo": "apps/r3f-demo",
+    "third-person-controls": "libs/third-person-controls"
   }
 }

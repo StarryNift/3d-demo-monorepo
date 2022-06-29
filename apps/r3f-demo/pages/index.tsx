@@ -21,6 +21,14 @@ export function Index() {
       <p>
         <Link href="/scene/city">Scene: City</Link>
       </p>
+      <p>
+        <Link href="/physics/third-person">Physics: Third Person</Link>
+      </p>
+      <p>
+        <Link href="/physics/constant-velocity">
+          Physics: Constant Velocity
+        </Link>
+      </p>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import {
   useThree
 } from '@react-three/fiber';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useMobileOrientation } from 'react-device-detect';
 import styled from 'styled-components';
 import { Mesh, PerspectiveCamera } from 'three';
@@ -55,7 +55,7 @@ export function MobileOrientationManager() {
   // NOTE: pointer issue
   // https://stackoverflow.com/questions/65727810/rotate-webgl-canvas-to-appear-landscape-oriented-on-a-portrait-oriented-mobile-p
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const innerWidth = window.innerWidth;
     const innerHeight = window.innerHeight;
 
