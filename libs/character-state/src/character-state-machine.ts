@@ -90,3 +90,6 @@ export const characterStateMachine = createMachine<
     }
   }
 );
+
+export type CharacterStateMachine = typeof characterStateMachine;
+export { CharacterStateEventType, CharacterStateContext };

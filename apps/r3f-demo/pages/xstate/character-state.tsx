@@ -1,8 +1,9 @@
-import { characterStateMachine } from '@3d/character-state';
+import {
+  CharacterStateEventType,
+  characterStateMachine
+} from '@3d/character-state';
 import { inspect } from '@xstate/inspect';
 import { useInterpret } from '@xstate/react';
-import { CharacterStateEventType } from 'libs/character-state/src/constant/event.enum';
-import { InteractionSubStateName } from 'libs/character-state/src/types/sub-state/interaction';
 import { useLayoutEffect, useRef } from 'react';
 
 // const srv = interpret(characterStateMachine, { devTools: true });
@@ -25,7 +26,6 @@ export default function CharacterStateMachine() {
       type: CharacterStateEventType.INTERRUPTIBLE_INTERACTION,
       animation: 'dance2'
     });
-    console.log(service.state);
   }, []);
 
   console.log('render CharacterStateMachine');
