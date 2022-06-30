@@ -2,19 +2,25 @@ import { ThirdPersonControls } from '@3d/third-person-controls';
 import {
   BodyProps,
   BoxProps,
+  CylinderProps,
   Debug,
   Physics,
   Triplet,
   useBox,
+  useCylinder,
   useRaycastAll,
-  useRaycastClosest
+  useRaycastClosest,
+  WorldProps
 } from '@react-three/cannon';
+import { PhysicsProviderProps } from '@react-three/cannon/dist/physics-provider';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import {
   BoxGeometryProps,
   Canvas,
   extend,
+  MeshPhongMaterialProps,
   MeshProps,
+  NodeProps,
   Object3DNode,
   RootState,
   useGraph
@@ -22,7 +28,7 @@ import {
 import { ContactMaterial } from 'cannon-es';
 import { useControls } from 'leva';
 import { keyboardMouseMoveStore } from 'libs/third-person-controls/src/lib/store/keyboard-mouse-input.store';
-import { useEffect } from 'react';
+import { Ref, useEffect } from 'react';
 import { Suspense, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
@@ -32,20 +38,10 @@ import {
   Vector3,
   Line as ThreeLine,
   WebGL1Renderer,
-  WebGLRenderer
+  WebGLRenderer,
+  MeshPhongMaterialParameters,
+  MeshPhongMaterial
 } from 'three';
-
-extend({
-  ThreeLine
-});
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      threeLine: Object3DNode<ThreeLine, typeof ThreeLine>;
-    }
-  }
-}
 
 function Floor() {
   const [ref] = useBox<Mesh>(() => ({
@@ -53,8 +49,7 @@ function Floor() {
     args: [25, 0.2, 25],
     mass: 0,
     material: {
-      friction: 0.01,
-      name: 'floor'
+      friction: 0.01
     },
     userData: {
       supporting: true
@@ -72,32 +67,53 @@ function Floor() {
   );
 }
 
-function Wall({ args, ...props }) {
-  const [ref] = useBox<Mesh>(
+export function Cylinder({
+  args,
+  ...props
+}: Pick<CylinderProps, 'args' | 'position' | 'rotation'>) {
+  const areaIndicator = useRef<MeshPhongMaterial>();
+  const [ref] = useCylinder<Mesh>(
     () => ({
       type: 'Static',
       args,
-      mass: 0,
-      sleepSpeedLimit: 1,
-      linearDamping: 1,
+      mass: 1,
+      isTrigger: true,
+      allowSleep: false,
       material: {
-        friction: 0.01,
-        name: 'wall'
+        friction: 0.01
       },
-      userData: {
-        supporting: true
+      onCollideBegin(e) {
+        console.log('enter', e.target);
+        areaIndicator.current.color.set('#00ff00');
+      },
+      onCollideEnd(e) {
+        console.log('exit', e);
+        // NOTE: Will be called after character enters the inside of the cylinder
+        areaIndicator.current.color.set('white');
       },
       collisionFilterGroup: 2,
+      userData: {
+        isTrigger: true
+      },
       ...props
     }),
     null,
     []
   );
 
+  useEffect(() => {
+    console.log('userData of trigger', ref.current.userData);
+  });
+
   return (
-    <mesh name="wall" receiveShadow ref={ref} {...props}>
-      <boxGeometry args={args} />
-      <meshPhongMaterial color="white" opacity={0.8} transparent />
+    <mesh name="trigger-cylinder" receiveShadow castShadow ref={ref} {...props}>
+      <cylinderGeometry args={args} />
+      <meshPhongMaterial
+        ref={areaIndicator}
+        color="white"
+        opacity={0.8}
+        transparent
+      />
     </mesh>
   );
 }
@@ -106,33 +122,49 @@ export function Box({
   args,
   ...props
 }: Pick<BoxProps, 'args' | 'position' | 'rotation'>) {
-  const values = useControls({
-    linearDamping: { value: 0, min: 0, max: 1 },
-    angularDamping: { value: 0, min: 0, max: 1 }
-  });
+  const areaIndicator = useRef<MeshPhongMaterial>();
   const [ref] = useBox<Mesh>(
     () => ({
-      type: 'Dynamic',
+      type: 'Static',
       args,
       mass: 1,
-      linearDamping: values.linearDamping,
-      angularDamping: values.angularDamping,
+      isTrigger: true,
+      allowSleep: false,
+      onCollideBegin(e) {
+        console.log('enter', e.target);
+        areaIndicator.current.color.set('#00ff00');
+      },
+      onCollideEnd(e) {
+        console.log('exit', e);
+        areaIndicator.current.color.set('white');
+      },
       material: {
         friction: 0.01,
         name: 'box_surface'
       },
       collisionFilterGroup: 2,
+      userData: {
+        isTrigger: true
+      },
       ...props
     }),
     null,
-    [values.linearDamping, values.angularDamping]
+    []
   );
-  console.log(values.linearDamping, values.angularDamping);
+
+  useEffect(() => {
+    console.log('userData of trigger', ref.current.userData);
+  });
 
   return (
-    <mesh receiveShadow ref={ref} {...props}>
+    <mesh name="trigger-box" receiveShadow castShadow ref={ref} {...props}>
       <boxGeometry args={args} />
-      <meshPhongMaterial color="white" opacity={0.8} transparent />
+      <meshPhongMaterial
+        ref={areaIndicator}
+        color="white"
+        opacity={0.8}
+        transparent
+      />
     </mesh>
   );
 }
@@ -214,28 +246,6 @@ export const PageContainer = styled.div`
   height: 100vh;
 `;
 
-type RayProps = {
-  from: Triplet;
-  setHit?: (e: {}) => void;
-  to: Triplet;
-};
-
-// function Ray({ from, to }: RayProps) {
-//   useRaycastClosest({ from, to }, e => {
-//     console.log('ray hit distance', e, e.distance);
-//   });
-//   const geometry = useMemo(() => {
-//     const points = [from, to].map(v => new Vector3(...v));
-//     return new BufferGeometry().setFromPoints(points);
-//   }, [from, to]);
-
-//   return (
-//     <threeLine geometry={geometry}>
-//       <lineBasicMaterial color="black" />
-//     </threeLine>
-//   );
-// }
-
 export default function ThirdPerson() {
   const onCreated = (state: RootState) => {
     console.log('canvas created');
@@ -255,38 +265,10 @@ export default function ThirdPerson() {
           <Physics gravity={[0, -10, 0]}>
             <Debug color="lime">
               <Floor />
-              <Wall
-                args={[25, 3, 0.2]}
-                position={[0, 1.4, -12.6]}
-                rotation={[-0.3, 0, 0]}
-              />
-              <Wall
-                args={[25, 25, 0.2]}
-                position={[0, 1.4, 12.6]}
-                rotation={[0.8, 0, 0]}
-              />
-              <Wall
-                args={[25, 3, 0.2]}
-                rotation={[0, -Math.PI / 2, 0]}
-                position={[12.6, 1.4, 0]}
-              />
-              <Wall
-                args={[25, 3, 0.2]}
-                rotation={[0, -Math.PI / 2, 0]}
-                position={[-12.6, 1.4, 0]}
-              />
-              {/* <Ray from={[0, 5, 0]} to={[0, 1, 0]} /> */}
-              <Wall
-                args={[5, 5, 0.2]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                position={[12.6, 1.4, 0]}
-              />
-              <Wall
-                args={[5, 5, 0.2]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                position={[0.8, 3.4, 0]}
-              />
-              <Box args={[2, 2, 2]} position={[3, 2, 3]} />
+              <Box args={[2, 2, 2]} position={[3, 2.5, 3]} />
+              <Box args={[4, 8, 4]} position={[9, 1, -7]} />
+              <Cylinder args={[2, 2, 2]} position={[-7, 2.5, -3]} />
+              <Cylinder args={[4, 4, 8]} position={[7, 2.5, -12]} />
               <Character />
             </Debug>
           </Physics>

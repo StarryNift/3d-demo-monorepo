@@ -1,8 +1,8 @@
 import { useCompoundBody } from '@react-three/cannon';
 import { Vec3 } from 'cannon-es';
-import { useRef } from 'react';
-import { Object3D } from 'three';
-import { useCharacterStateStore } from '../store/use-character-state-store';
+import { useEffect, useRef } from 'react';
+import { Object3D, Vector3 } from 'three';
+import { useCharacterStateStore } from '../store/use-character-state.store';
 
 const upAxis = new Vec3(0, 1, 0);
 
@@ -16,6 +16,17 @@ export default function useCapsuleCollider(
    */
   const contactNormal = useRef(new Vec3());
 
+  const velocity = useRef(new Vector3());
+
+  useEffect(
+    () =>
+      collider.velocity.subscribe(v => {
+        velocity.current.set(...v);
+        // console.log('collider velocity', v);
+      }),
+    []
+  );
+
   const [, collider] = useCompoundBody(
     () => {
       const radius = 0.3;
@@ -25,7 +36,8 @@ export default function useCapsuleCollider(
         // linearDamping: 0.7,
         // angularDamping: 1,
         allowSleep: true,
-        sleepSpeedLimit: 1,
+        // https://github.com/pmndrs/use-cannon/issues/177
+        sleepSpeedLimit: 0.05,
         material: {
           friction: 0.08,
           restitution: 0,
@@ -44,7 +56,10 @@ export default function useCapsuleCollider(
         onCollide(e) {
           const { contact, target } = e;
 
-          // console.log('collision', e);
+          // Contact body can not support character with standing
+          if (!e.body.userData['supporting']) {
+            return;
+          }
 
           // 获取接触点相对于所接触物体（非人物刚体本身）的法线向量, 模长为1
           // 用于计算碰撞角度
@@ -92,8 +107,22 @@ export default function useCapsuleCollider(
           console.log('collide begin', e);
         },
         onCollideEnd(e) {
-          console.log('collide end', e);
-          console.log(collider.velocity);
+          // const v = new Vector3();
+          // collider.velocity.copy(v);
+          console.log(
+            'collide end',
+            e,
+            velocity.current,
+            velocity.current.length()
+          );
+
+          if (velocity.current.y < 0) {
+            console.log('falling start');
+          }
+
+          if (velocity.current.length() <= 0.05) {
+            console.log('sleeping now');
+          }
         },
         position: [0, 0, 0],
         rotation: [0, Math.PI, 0],

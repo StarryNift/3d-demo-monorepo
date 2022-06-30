@@ -9,7 +9,7 @@ import useRay from './hooks/use-ray';
 import useThirdPersonCameraControls from './hooks/use-third-person-camera-controls';
 import { CharacterStateInputStore } from './store/character-state-input.store';
 import { keyboardMouseMoveStore } from './store/keyboard-mouse-input.store';
-import { useCharacterStateStore } from './store/use-character-state-store';
+import { useCharacterStateStore } from './store/use-character-state.store';
 
 /* eslint-disable-next-line */
 export interface ThirdPersonControlsProps {
@@ -92,7 +92,7 @@ export function ThirdPersonControls(
 
     collider.position.subscribe(p => {
       // position is set on collider so we copy it to model
-      modelRef.current?.position.set(...p);
+      modelRef.current?.position.lerp(new Vector3(p[0], p[1], p[2]), 0.1);
       // setState with position to  useCharacterState
       setPosition(p);
     });
@@ -160,7 +160,7 @@ export function ThirdPersonControls(
     cameraContainer.current.getWorldPosition(rayVector.current);
     controls?.update(ray);
 
-    // console.log('y position', modelRef.current.position.y);
+    // console.log('y position', velocity.current);
   });
 
   // console.log('inputs', modelRef.current.position);
