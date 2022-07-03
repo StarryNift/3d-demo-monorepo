@@ -61,6 +61,7 @@
     "cannon-es": "^0.19.0",
     "core-js": "^3.6.5",
     "default-passive-events": "^2.0.0",
+    "dotenv": "^16.0.1",
     "leva": "^0.9.27",
     "lodash": "^4.17.21",
     "manny": "^3.0.0",
@@ -73,6 +74,7 @@
     "regenerator-runtime": "0.13.7",
     "styled-components": "5.3.5",
     "three": "^0.141.0",
+    "three-stdlib": "^2.12.1",
     "tslib": "^2.3.0",
     "xstate": "^4.32.1",
     "zustand": "4.0.0-rc.1"

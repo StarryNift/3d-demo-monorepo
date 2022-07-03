@@ -27,6 +27,10 @@ export default function useCapsuleCollider(
     []
   );
 
+  useEffect(() => {
+    collider.position.set(0, 20, 0);
+  }, []);
+
   const [, collider] = useCompoundBody(
     () => {
       const radius = 0.3;
@@ -57,9 +61,9 @@ export default function useCapsuleCollider(
           const { contact, target } = e;
 
           // Contact body can not support character with standing
-          if (!e.body.userData['supporting']) {
-            return;
-          }
+          // if (!e.body.userData['supporting']) {
+          //   return;
+          // }
 
           // 获取接触点相对于所接触物体（非人物刚体本身）的法线向量, 模长为1
           // 用于计算碰撞角度
@@ -127,6 +131,7 @@ export default function useCapsuleCollider(
         position: [0, 0, 0],
         rotation: [0, Math.PI, 0],
         collisionFilterGroup: 1
+        // collisionFilterMask: 2
       };
     },
     modelRef,

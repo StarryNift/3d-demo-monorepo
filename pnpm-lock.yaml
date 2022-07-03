@@ -33,6 +33,7 @@ specifiers:
   core-js: ^3.6.5
   cypress: ^9.1.0
   default-passive-events: ^2.0.0
+  dotenv: ^16.0.1
   eslint: ^8.18.0
   eslint-config-next: 12.1.6
   eslint-plugin-cypress: ^2.10.3
@@ -56,6 +57,7 @@ specifiers:
   regenerator-runtime: 0.13.7
   styled-components: 5.3.5
   three: ^0.141.0
+  three-stdlib: ^2.12.1
   ts-jest: 27.1.4
   ts-node: ~10.8.0
   tslib: ^2.3.0
@@ -76,6 +78,7 @@ dependencies:
   cannon-es: 0.19.0
   core-js: 3.23.2
   default-passive-events: 2.0.0
+  dotenv: 16.0.1
   leva: 0.9.27_biqbaboplfbrettd7655fr4n2y
   lodash: 4.17.21
   manny: 3.0.0_5x6wbexidglmuz7j2oueaqqxie
@@ -88,6 +91,7 @@ dependencies:
   regenerator-runtime: 0.13.7
   styled-components: 5.3.5_7i5myeigehqah43i5u7wbekgba
   three: 0.141.0
+  three-stdlib: 2.12.1_three@0.141.0
   tslib: 2.4.0
   xstate: 4.32.1
   zustand: 4.0.0-rc.1_react@18.2.0
@@ -5344,6 +5348,11 @@ packages:
   /dotenv/10.0.0:
     resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
     engines: {node: '>=10'}
+
+  /dotenv/16.0.1:
+    resolution: {integrity: sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==}
+    engines: {node: '>=12'}
+    dev: false
 
   /draco3d/1.5.2:
     resolution: {integrity: sha512-AeRQ25Fb29c14vpjnh167UGW0nGY0ZpEM3ld+zEXoEySlmEXcXfsCHZeTgo5qXH925V1JsdjrzasdaQ22/vXog==}

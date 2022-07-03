@@ -5,11 +5,13 @@ import {
   CylinderProps,
   Debug,
   Physics,
+  SphereProps,
   Triplet,
   useBox,
   useCylinder,
   useRaycastAll,
   useRaycastClosest,
+  useSphere,
   WorldProps
 } from '@react-three/cannon';
 import { PhysicsProviderProps } from '@react-three/cannon/dist/physics-provider';
@@ -169,6 +171,57 @@ export function Box({
   );
 }
 
+export function Sphere({
+  args,
+  ...props
+}: Pick<SphereProps, 'args' | 'position' | 'rotation'>) {
+  const areaIndicator = useRef<MeshPhongMaterial>();
+  const [ref] = useSphere<Mesh>(
+    () => ({
+      type: 'Static',
+      args,
+      mass: 1,
+      isTrigger: true,
+      allowSleep: false,
+      onCollideBegin(e) {
+        console.log('enter', e.target);
+        areaIndicator.current.color.set('#00ff00');
+      },
+      onCollideEnd(e) {
+        console.log('exit', e);
+        areaIndicator.current.color.set('white');
+      },
+      material: {
+        friction: 0.01,
+        name: 'box_surface'
+      },
+      collisionFilterGroup: 2,
+      userData: {
+        isTrigger: true
+      },
+      ...props
+    }),
+    null,
+    []
+  );
+
+  useEffect(() => {
+    console.log('userData of trigger', ref.current.userData);
+  });
+
+  return (
+    <mesh name="trigger-box" receiveShadow castShadow ref={ref} {...props}>
+      <sphereGeometry args={args} />
+      <meshPhongMaterial
+        ref={areaIndicator}
+        color="white"
+        opacity={0.8}
+        transparent
+      />
+    </mesh>
+  );
+}
+
 export function Character() {
   const modelRef = useRef<Group>();
   const { scene, animations } = useGLTF(
@@ -267,12 +320,14 @@ export default function ThirdPerson() {
               <Floor />
               <Box args={[2, 2, 2]} position={[3, 2.5, 3]} />
               <Box args={[4, 8, 4]} position={[9, 1, -7]} />
-              <Cylinder args={[2, 2, 2]} position={[-7, 2.5, -3]} />
-              <Cylinder args={[4, 4, 8]} position={[7, 2.5, -12]} />
+              <Cylinder args={[2, 2, 2, 15]} position={[-7, 2.5, -3]} />
+              <Cylinder args={[4, 4, 8, 15]} position={[10, 2.5, 12]} />
+              <Sphere args={[3]} position={[-10, 0, 10]} />
               <Character />
             </Debug>
           </Physics>
         </Suspense>
+        <axesHelper args={[10]} />
       </Canvas>
     </PageContainer>
   );

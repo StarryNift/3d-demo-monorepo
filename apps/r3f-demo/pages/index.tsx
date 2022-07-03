@@ -30,7 +30,9 @@ export function Index() {
         </Link>
       </p>
       <p>
-        <Link href="/physics/interactive-area">Physics: Interactive Area</Link>
+        <Link href="/physics/triggers">
+          Physics: Interactive Area (Triggers)
+        </Link>
       </p>
       <p>
         <Link href="/xstate/character-state">
