@@ -1,34 +1,17 @@
-import type { ConvexPolyhedronProps } from '@react-three/cannon';
-import { useConvexPolyhedron } from '@react-three/cannon';
-import { memo, useMemo } from 'react';
-import { BufferGeometry, Mesh, MeshStandardMaterial } from 'three';
-import { Geometry } from 'three-stdlib';
+import { useTrimesh } from '@react-three/cannon';
+import { memo } from 'react';
+import { Mesh, MeshStandardMaterial } from 'three';
 import shallow from 'zustand/shallow';
 import type { ModelTransform, PhysicsDescriptor } from '../types/manifest';
 
-export interface ConvexPolyhedronColliderProps {
+export interface TrimeshColliderProps {
   physics?: PhysicsDescriptor;
   node: Mesh;
   material?: MeshStandardMaterial;
   parentTransform?: ModelTransform;
 }
 
-// Returns legacy geometry vertices, faces for ConvP
-function toConvexProps(
-  bufferGeometry: BufferGeometry
-): ConvexPolyhedronProps['args'] {
-  const geo = new Geometry().fromBufferGeometry(bufferGeometry);
-  // Merge duplicate vertices resulting from glTF export.
-  // Cannon assumes contiguous, closed meshes to work
-  geo.mergeVertices();
-  return [
-    geo.vertices.map(v => [v.x, v.y, v.z]),
-    geo.faces.map(f => [f.a, f.b, f.c]),
-    []
-  ];
-}
-
-export const ConvexPolyhedronCollider = memo(
+export const TrimeshCollider = memo(
   ({
     node,
     physics,
@@ -38,21 +21,23 @@ export const ConvexPolyhedronCollider = memo(
       eulerAngles: { x: 0, y: 0, z: 0 },
       scale: { x: 0, y: 0, z: 0 }
     }
-  }: ConvexPolyhedronColliderProps) => {
-    console.log('ConvexPolyhedronCollider', {
+  }: TrimeshColliderProps) => {
+    console.log('TriMeshCollider', {
       node,
       physics,
       material,
       parentTransform
     });
 
-    const geo = useMemo(() => toConvexProps(node.geometry), [node]);
-    const [ref, _api] = useConvexPolyhedron(
+    const [ref, _api] = useTrimesh(
       () => ({
         // ...props,
         name: node.name,
         userData: node.userData,
-        args: geo,
+        args: [
+          node.geometry.attributes['position'].array,
+          node.geometry.index!.array
+        ],
         position: [
           node.position.x + parentTransform.position.x,
           node.position.y + parentTransform.position.y,

@@ -47,13 +47,13 @@ const sceneManifest: ManifestJson = {
       ],
       physics: [
         {
-          bodyType: 'ConvexPolyhedron',
+          bodyType: 'Trimesh',
           node: 'G-__557877',
           material: 'ground',
           render: true
         },
         {
-          bodyType: 'ConvexPolyhedron',
+          bodyType: 'Trimesh',
           node: 'G-__557967',
           material: 'ground',
           render: true
@@ -412,11 +412,13 @@ export default function SceneFromJson() {
           <Debug color="lime">
             <Suspense fallback={null}>
               <DynamicScene debug={true} manifest={sceneManifest} sceneId={3} />
-              {/* <Character /> */}
             </Suspense>
           </Debug>
+          <Suspense fallback={null}>
+            <Character />
+          </Suspense>
         </Physics>
-        <PerspectiveCamera
+        {/* <PerspectiveCamera
           ref={cameraRef}
           makeDefault
           near={5}
@@ -425,8 +427,8 @@ export default function SceneFromJson() {
             -0.6618925366384613, -0.12487213705609983, -0.052392943848409514
           ]}
           fov={75}
-        />
-        <ArcballControls />
+        /> */}
+        {/* <ArcballControls /> */}
       </Canvas>
     </PageContainer>
   );

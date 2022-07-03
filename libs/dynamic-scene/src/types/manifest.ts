@@ -5,7 +5,7 @@ export interface Vector3 {
 }
 
 export interface PhysicsDescriptor {
-  bodyType: 'ConvexPolyhedron';
+  bodyType: 'ConvexPolyhedron' | 'Trimesh';
   /**
    * Name of the sub-mesh to use for the physics body.
    */

@@ -162,7 +162,7 @@ export function Character() {
   }, []);
 
   return (
-    <ThirdPersonControls modelRef={modelRef}>
+    <ThirdPersonControls modelRef={modelRef} initialPosition={[5, 20, 5]}>
       <group name="character" ref={modelRef}>
         <group name="Scene" position={[0, 0.8, 0]} rotation={[0, 0, 0]}>
           <group

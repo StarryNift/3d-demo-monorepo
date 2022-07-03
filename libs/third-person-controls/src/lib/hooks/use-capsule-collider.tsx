@@ -27,10 +27,6 @@ export default function useCapsuleCollider(
     []
   );
 
-  useEffect(() => {
-    collider.position.set(0, 20, 0);
-  }, []);
-
   const [, collider] = useCompoundBody(
     () => {
       const radius = 0.3;

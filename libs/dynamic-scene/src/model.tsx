@@ -7,6 +7,7 @@ import { MathUtils } from 'three';
 import type { GLTF } from 'three-stdlib/loaders/GLTFLoader';
 import shallow from 'zustand/shallow';
 import { ConvexPolyhedronCollider } from './physics/convex-polyhedron-collider';
+import { TrimeshCollider } from './physics/trimesh-collider';
 import { ModelManifest, PhysicsDescriptor } from './types/manifest';
 
 export interface ModelProps {
@@ -110,6 +111,23 @@ export const Model = memo((props: ModelProps) => {
           case 'ConvexPolyhedron':
             return (
               <ConvexPolyhedronCollider
+                key={collider.mesh.uuid}
+                node={collider.mesh}
+                physics={collider.physics}
+                parentTransform={{
+                  position: { x: -position.x, y: position.y, z: position.z },
+                  eulerAngles: {
+                    x: MathUtils.degToRad(eulerAngles.x),
+                    y: -MathUtils.degToRad(eulerAngles.y),
+                    z: MathUtils.degToRad(eulerAngles.z)
+                  },
+                  scale
+                }}
+              />
+            );
+          case 'Trimesh':
+            return (
+              <TrimeshCollider
                 key={collider.mesh.uuid}
                 node={collider.mesh}
                 physics={collider.physics}

@@ -14,6 +14,8 @@ import { useCharacterStateStore } from './store/use-character-state.store';
 /* eslint-disable-next-line */
 export interface ThirdPersonControlsProps {
   modelRef: React.MutableRefObject<Object3D>;
+  initialPosition?: [number, number, number];
+  initialQuaternion?: [number, number, number, number];
 }
 
 export function ThirdPersonControls(
@@ -96,6 +98,10 @@ export function ThirdPersonControls(
       // setState with position to  useCharacterState
       setPosition(p);
     });
+
+    if (props.initialPosition) {
+      collider.position.set(...props.initialPosition);
+    }
   }, []);
 
   useFrame(() => {
