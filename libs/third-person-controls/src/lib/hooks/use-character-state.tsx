@@ -1,11 +1,9 @@
 import { PublicApi, Triplet, useRaycastClosest } from '@react-three/cannon';
 import { useState, useEffect } from 'react';
-import { DefaultKeyboardInputsSupported } from '../store/keyboard-mouse-input.store';
+import { DefaultKeyPressWatching } from '../store/keyboard-mouse-input.store';
 
 const getAnimationFromUserInputs = (
-  inputs: Partial<
-    Record<DefaultKeyboardInputsSupported | 'isMouseLooking', boolean>
-  >
+  inputs: Partial<Record<DefaultKeyPressWatching | 'isMouseLooking', boolean>>
 ) => {
   const { up, down, right, left, isMouseLooking } = inputs;
 
@@ -29,9 +27,7 @@ const getAnimationFromUserInputs = (
 };
 
 export default function useCharacterState(
-  inputs: Partial<
-    Record<DefaultKeyboardInputsSupported | 'isMouseLooking', boolean>
-  >,
+  inputs: Partial<Record<DefaultKeyPressWatching | 'isMouseLooking', boolean>>,
   position: [number, number, number],
   collider: PublicApi,
   mixer: any

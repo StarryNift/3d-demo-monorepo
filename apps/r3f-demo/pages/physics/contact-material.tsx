@@ -116,6 +116,29 @@ export function Ball({
   );
 }
 
+export function Box({
+  args,
+  ...props
+}: Pick<BoxProps, 'args' | 'position' | 'rotation'>) {
+  const [ref] = useBox<Mesh>(
+    () => ({
+      type: 'Dynamic',
+      args,
+      mass: 1,
+      material: 'floor',
+      ...props
+    }),
+    null
+  );
+
+  return (
+    <mesh receiveShadow ref={ref} {...props}>
+      <boxGeometry args={args} />
+      <meshPhongMaterial color="white" opacity={0.8} transparent />
+    </mesh>
+  );
+}
+
 const DEFAULT_CONTACT_MATERIAL = {
   friction: 0.3,
   restitution: 0.3,
@@ -162,9 +185,11 @@ export function MaterialConfig() {
 
       const { api: defaultApi } = ballStore.getState()['default'];
       defaultApi.position.set(0, 25, 6);
+      defaultApi.velocity.set(0, 2, 0);
 
       const { api: customApi } = ballStore.getState()['custom'];
       customApi.position.set(0, 25, -6);
+      customApi.velocity.set(0, 2, 0);
     })
   });
 
@@ -209,6 +234,7 @@ export default function ContactMaterial() {
             color="blue"
             position={[0, 25, 6]}
           />
+          {/* <Box args={[2, 2, 2]} position={[0, 1, 6]} /> */}
           <Ball
             ballRef={customBall}
             name="custom"
@@ -216,6 +242,7 @@ export default function ContactMaterial() {
             color="lime"
             position={[0, 25, -6]}
           />
+          {/* <Box args={[2, 2, 2]} position={[0, 1, -6]} /> */}
           <MaterialConfig />
         </Physics>
         <PerspectiveCamera

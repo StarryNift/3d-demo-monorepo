@@ -1,59 +1,89 @@
 import { useEffect } from 'react';
+import shallow from 'zustand/shallow';
 import {
-  DefaultKeyboardInputsSupported,
+  DefaultKeyPressWatching,
+  DefaultKeyTriggers,
   DEFAULT_KEY_MAPPINGS,
+  DEFAULT_KEY_TRIGGERS,
   useKeyboardMouseMoveStore
 } from '../store/keyboard-mouse-input.store';
+import { reverseKeyMapping } from '../utility/reverse-key-mapping';
 import { InputEventManager } from './use-input-event-manager';
-
-function getInputFromKeyboard<T extends string>(
-  keyMap: Record<T, string | string[]>,
-  keyPressed: string
-): T | undefined {
-  for (const key in keyMap) {
-    const mappings = ([] as string[]).concat(keyMap[key]);
-    if (mappings.includes(keyPressed)) {
-      return key;
-    }
-  }
-  return;
-}
-
 /**
  * Keyboard event input => input event manager => camera & character
  * @param inputManager
- * @param userKeyMap
+ * @param userKeyMapPressing Key mapping for keys currently pressing
  * @returns
  */
 export default function useKeyboardInput<T extends string>(
   inputManager: InputEventManager,
-  userKeyMap: Record<T, string | string[]> = {} as any
-): Partial<
-  Record<DefaultKeyboardInputsSupported | T | 'isMouseLooking', boolean>
-> {
-  const keyMap = {
-    ...DEFAULT_KEY_MAPPINGS,
-    ...userKeyMap
-  };
+  userKeyMapPressing: Partial<Record<T, string | string[]>> = {},
+  userKeyMapTriggers: Partial<Record<T, string[]>> = {}
+): Partial<Record<DefaultKeyPressWatching | T | 'isMouseLooking', boolean>> {
+  /**
+   * Key mapping for keys currently pressing
+   */
+  const keyPressingMap = reverseKeyMapping<T & DefaultKeyPressWatching, string>(
+    {
+      ...DEFAULT_KEY_MAPPINGS,
+      ...userKeyMapPressing
+    }
+  );
+
+  /**
+   * Keys to watch in keyup event
+   */
+  const keyUpTriggersMap = reverseKeyMapping<T & DefaultKeyTriggers, string>(
+    {
+      ...DEFAULT_KEY_TRIGGERS,
+      ...userKeyMapTriggers
+    },
+    key => (key.endsWith('Up') ? key.slice(0, -2) : undefined)
+  );
+
+  /**
+   * Keys to watch in keydown event
+   */
+  const keyDownTriggersMap = reverseKeyMapping<T & DefaultKeyTriggers, string>(
+    {
+      ...DEFAULT_KEY_TRIGGERS,
+      ...userKeyMapTriggers
+    },
+    key => (key.endsWith('Down') ? key.slice(0, -4) : undefined)
+  );
 
   const {
-    inputsPressed,
+    inputsPressing,
     isMouseLooking,
     setPressed,
     setReleased,
-    setIsMouseLooking
-  } = useKeyboardMouseMoveStore();
+    setIsMouseLooking,
+    setActionTriggered
+  } = useKeyboardMouseMoveStore(
+    state => ({
+      inputsPressing: state.inputsPressing,
+      isMouseLooking: state.isMouseLooking,
+      setPressed: state.setPressed,
+      setReleased: state.setReleased,
+      setIsMouseLooking: state.setIsMouseLooking,
+      setActionTriggered: state.setActionTriggered
+    }),
+    shallow
+  );
 
   /**
    * Mark key as pressed after 'keydown' event
    */
   function downHandler({ code }: KeyboardEvent) {
-    const input = getInputFromKeyboard<T | DefaultKeyboardInputsSupported>(
-      keyMap,
-      code
-    );
+    const input = keyPressingMap[code];
     if (input) {
       setPressed(input);
+    }
+
+    const triggered = keyDownTriggersMap[code];
+    if (triggered) {
+      console.log('keydown', code);
+      setActionTriggered(triggered);
     }
   }
 
@@ -61,12 +91,15 @@ export default function useKeyboardInput<T extends string>(
    * Reset key as released after 'keyup' event
    */
   const upHandler = ({ code }: KeyboardEvent) => {
-    const input = getInputFromKeyboard<T | DefaultKeyboardInputsSupported>(
-      keyMap,
-      code
-    );
+    const input = keyPressingMap[code];
     if (input) {
       setReleased(input);
+    }
+
+    const triggered = keyUpTriggersMap[code];
+    if (triggered) {
+      console.log('keyup', code);
+      setActionTriggered(triggered);
     }
   };
 
@@ -107,5 +140,5 @@ export default function useKeyboardInput<T extends string>(
     };
   }, []);
 
-  return { ...inputsPressed, isMouseLooking } as any;
+  return { ...inputsPressing, isMouseLooking } as any;
 }

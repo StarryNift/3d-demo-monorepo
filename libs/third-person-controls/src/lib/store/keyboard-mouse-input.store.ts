@@ -11,16 +11,22 @@ export const DEFAULT_KEY_MAPPINGS = {
   down: ['KeyS', 'ArrowDown'],
   left: ['KeyA', 'ArrowLeft'],
   right: ['KeyD', 'ArrowRight'],
-  jump: 'Space',
-  walk: ['ShiftLeft', 'ShiftRight']
+  jump: 'Space'
 } as const;
 
-export type DefaultKeyboardInputsSupported = keyof typeof DEFAULT_KEY_MAPPINGS;
+export type DefaultKeyPressWatching = keyof typeof DEFAULT_KEY_MAPPINGS;
+
+export const DEFAULT_KEY_TRIGGERS = {
+  jump: ['SpaceDown'],
+  toggleWalk: ['ShiftLeftDown', 'ShiftRightDown']
+} as const;
+
+export type DefaultKeyTriggers = keyof typeof DEFAULT_KEY_TRIGGERS;
 
 export interface KeyboardMouseInputStore<
-  T extends DefaultKeyboardInputsSupported = DefaultKeyboardInputsSupported
+  T extends DefaultKeyPressWatching = DefaultKeyPressWatching
 > extends CharacterStateInputStore {
-  inputsPressed: Partial<Record<T, boolean>>;
+  inputsPressing: Partial<Record<T, boolean>>;
   /**
    * Character's model rotation will follow the camera's rotation.
    */
@@ -30,8 +36,26 @@ export interface KeyboardMouseInputStore<
    */
   rotationSpeed: 0.05;
 
+  /**
+   * Latest action key trigger recorded.
+   */
+  actionTriggered?: string;
+
+  /**
+   * Record a key is pressed down
+   */
   setPressed: (key: string) => void;
+
+  /**
+   * Record a key is released
+   */
   setReleased: (key: string) => void;
+
+  /**
+   * Record an action key is triggered
+   */
+  setActionTriggered: (key: string) => void;
+
   setIsMouseLooking: (isMouseLooking: boolean) => void;
 }
 
@@ -39,23 +63,27 @@ export const keyboardMouseMoveStore = createStore<KeyboardMouseInputStore>()(
   subscribeWithSelector(
     (set, get) =>
       ({
-        inputsPressed: {},
+        inputsPressing: {},
         isMouseLooking: false,
         // Angular speed in radians per frame the character rotating.
         rotationSpeed: 0.05,
 
         setPressed(key) {
           set(state => ({
-            ...state,
-            inputsPressed: { ...state.inputsPressed, [key]: true }
+            inputsPressing: { ...state.inputsPressing, [key]: true }
           }));
         },
 
         setReleased(key) {
           set(state => ({
-            ...state,
-            inputsPressed: { ...state.inputsPressed, [key]: false }
+            inputsPressing: { ...state.inputsPressing, [key]: false }
           }));
+        },
+
+        setActionTriggered(key) {
+          set({
+            actionTriggered: key
+          });
         },
 
         setIsMouseLooking(isMouseLooking: boolean) {
@@ -65,7 +93,7 @@ export const keyboardMouseMoveStore = createStore<KeyboardMouseInputStore>()(
         },
 
         getCharacterLookAtDeltaRadian() {
-          const { inputsPressed, isMouseLooking } = get();
+          const { inputsPressing: inputsPressed, isMouseLooking } = get();
           const { left, right } = inputsPressed;
 
           if (isMouseLooking) {
@@ -87,7 +115,7 @@ export const keyboardMouseMoveStore = createStore<KeyboardMouseInputStore>()(
         },
 
         getCharacterMovementDirection() {
-          const { inputsPressed, isMouseLooking } = get();
+          const { inputsPressing: inputsPressed, isMouseLooking } = get();
           const { left, right, up, down } = inputsPressed;
 
           const positiveX = isMouseLooking && right ? -1 : 0;
@@ -103,8 +131,8 @@ export const keyboardMouseMoveStore = createStore<KeyboardMouseInputStore>()(
         },
 
         getBaseVelocity() {
-          const isForwarding = get().inputsPressed.up;
-          const isBackpedaling = get().inputsPressed.down;
+          const isForwarding = get().inputsPressing.up;
+          const isBackpedaling = get().inputsPressing.down;
 
           if (isForwarding) {
             return 4;
@@ -121,12 +149,12 @@ export const keyboardMouseMoveStore = createStore<KeyboardMouseInputStore>()(
           get isMoving(): boolean {
             // console.log('calc isMoving');
 
-            const { inputsPressed } = get();
+            const { inputsPressing: inputsPressed } = get();
             const { up, down, left, right } = inputsPressed;
             return (up || down || left || right) ?? false;
           },
           get isRotating(): boolean {
-            const { inputsPressed, isMouseLooking } = get();
+            const { inputsPressing: inputsPressed, isMouseLooking } = get();
             const { left, right } = inputsPressed;
             return (isMouseLooking || left || right) ?? false;
           }
