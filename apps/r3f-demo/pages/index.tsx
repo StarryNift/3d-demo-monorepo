@@ -35,6 +35,9 @@ export function Index() {
         </Link>
       </p>
       <p>
+        <Link href="/physics/contact-material">Physics: Contact Material</Link>
+      </p>
+      <p>
         <Link href="/xstate/character-state">
           XState: Character State Machine
         </Link>
