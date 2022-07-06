@@ -1,10 +1,10 @@
 import type { CharacterStateContext } from './context';
-import { InteractionSubState } from './sub-state/interaction';
 import { CharacterMovingSubState } from './sub-state/moving';
 
 export enum StateName {
   IDLE = 'Idle',
   MOVING = 'Moving',
+  ROTATING = 'Rotating',
   WALKING = 'Walking',
   RUNNING = 'Running',
   JUMPING = 'Jumping',

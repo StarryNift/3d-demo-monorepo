@@ -9,7 +9,7 @@ import {
   useRaycastAll,
   useRaycastClosest
 } from '@react-three/cannon';
-import { useAnimations, useGLTF } from '@react-three/drei';
+import { Html, useAnimations, useGLTF } from '@react-three/drei';
 import {
   BoxGeometryProps,
   Canvas,
@@ -21,8 +21,9 @@ import {
 } from '@react-three/fiber';
 import { ContactMaterial } from 'cannon-es';
 import { useControls } from 'leva';
+import { CharacterReactStateContext } from 'libs/third-person-controls/src/lib/context/state-context';
 import { keyboardMouseMoveStore } from 'libs/third-person-controls/src/lib/store/keyboard-mouse-input.store';
-import { useEffect } from 'react';
+import { MutableRefObject, useContext, useEffect } from 'react';
 import { Suspense, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import {
@@ -32,7 +33,8 @@ import {
   Vector3,
   Line as ThreeLine,
   WebGL1Renderer,
-  WebGLRenderer
+  WebGLRenderer,
+  Object3D
 } from 'three';
 
 extend({
@@ -81,7 +83,7 @@ function Wall({ args, ...props }) {
       sleepSpeedLimit: 1,
       linearDamping: 1,
       material: {
-        friction: 0.01,
+        friction: 0.1,
         name: 'wall'
       },
       userData: {
@@ -106,17 +108,13 @@ export function Box({
   args,
   ...props
 }: Pick<BoxProps, 'args' | 'position' | 'rotation'>) {
-  const values = useControls({
-    linearDamping: { value: 0, min: 0, max: 1 },
-    angularDamping: { value: 0, min: 0, max: 1 }
-  });
   const [ref] = useBox<Mesh>(
     () => ({
       type: 'Dynamic',
       args,
       mass: 1,
-      linearDamping: values.linearDamping,
-      angularDamping: values.angularDamping,
+      // linearDamping: values.linearDamping,
+      // angularDamping: values.angularDamping,
       material: {
         friction: 0.01,
         name: 'box_surface'
@@ -125,9 +123,8 @@ export function Box({
       ...props
     }),
     null,
-    [values.linearDamping, values.angularDamping]
+    []
   );
-  console.log(values.linearDamping, values.angularDamping);
 
   return (
     <mesh receiveShadow ref={ref} {...props}>
@@ -135,6 +132,34 @@ export function Box({
       <meshPhongMaterial color="white" opacity={0.8} transparent />
     </mesh>
   );
+}
+
+export function CharacterAnimationIndicator() {
+  const { fsm } = useContext(CharacterReactStateContext);
+  const [_values, set] = useControls(() => ({
+    animation: {
+      value: 'idle',
+      disabled: true
+    },
+    movementSpeed: {
+      value: 0,
+      disabled: true
+    }
+  }));
+
+  useEffect(() => {
+    fsm.onTransition(t => {
+      if (t.changed) {
+        // console.debug('transition changed', t.value, t.context);
+        set({
+          animation: t.context.animation,
+          movementSpeed: t.context.moveMode
+        });
+      }
+    });
+  }, []);
+
+  return null;
 }
 
 export function Character() {
@@ -160,6 +185,8 @@ export function Character() {
       e => console.log('moving', e)
     );
   }, []);
+
+  console.log('render character');
 
   return (
     <ThirdPersonControls modelRef={modelRef} initialPosition={[5, 20, 5]}>
@@ -204,6 +231,7 @@ export function Character() {
             />
           </group>
         </group>
+        <CharacterAnimationIndicator />
       </group>
     </ThirdPersonControls>
   );
@@ -246,6 +274,7 @@ export default function ThirdPerson() {
   return (
     <PageContainer>
       <Canvas
+        shadows
         onCreated={onCreated}
         resize={{ debounce: { scroll: 0, resize: 0 } }}
       >
@@ -262,18 +291,23 @@ export default function ThirdPerson() {
               />
               <Wall
                 args={[25, 25, 0.2]}
+                position={[0, 1.4, -12.6]}
+                rotation={[-1.3, 0, 0]}
+              />
+              <Wall
+                args={[25, 25, 0.2]}
                 position={[0, 1.4, 12.6]}
                 rotation={[0.8, 0, 0]}
               />
               <Wall
                 args={[25, 3, 0.2]}
-                rotation={[0, -Math.PI / 2, 0]}
                 position={[12.6, 1.4, 0]}
+                rotation={[0, -Math.PI / 2, 0]}
               />
               <Wall
                 args={[25, 3, 0.2]}
-                rotation={[0, -Math.PI / 2, 0]}
                 position={[-12.6, 1.4, 0]}
+                rotation={[0, -Math.PI / 2, 0]}
               />
               {/* <Ray from={[0, 5, 0]} to={[0, 1, 0]} /> */}
               <Wall

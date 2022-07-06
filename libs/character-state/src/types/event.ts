@@ -1,10 +1,14 @@
 import { CharacterStateEventType } from '../constant/event.enum';
 import { CharacterAnimation } from './context';
-import { InteractionSubStateName } from './sub-state/interaction';
+import type { PublicApi } from '@react-three/cannon';
 
 export interface MoveEvent {
   type: CharacterStateEventType.MOVE;
   direction: [number, number, number];
+}
+
+export interface RotateEvent {
+  type: CharacterStateEventType.ROTATE;
 }
 
 export interface CancelEvent {
@@ -13,6 +17,10 @@ export interface CancelEvent {
 
 export interface JumpEvent {
   type: CharacterStateEventType.JUMP;
+}
+
+export interface JumpedEvent {
+  type: CharacterStateEventType.JUMPED;
 }
 
 export interface FallEvent {
@@ -42,10 +50,24 @@ export interface InteractionDoneEvent {
   type: CharacterStateEventType.INTERACTION_DONE;
 }
 
+export interface FaceEvent {
+  type: CharacterStateEventType.FACE;
+  facing: [number, number, number];
+}
+
+export interface UpdateVelocityEvent {
+  type: CharacterStateEventType.UPDATE_VELOCITY;
+  velocity: [number, number, number];
+}
+
 export type TransitionEvent =
+  | FaceEvent
+  | UpdateVelocityEvent
   | MoveEvent
+  | RotateEvent
   | CancelEvent
   | JumpEvent
+  | JumpedEvent
   | FallEvent
   | LandedEvent
   | InteractionEvent

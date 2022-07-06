@@ -1,5 +1,4 @@
-import 'default-passive-events';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export type EventTypes = KeyboardEvent | WheelEvent | PointerEvent | MouseEvent;
 
@@ -58,18 +57,32 @@ export default function useInputEventManager(
   const contextmenuHandler = makeEventHandler('contextmenu');
 
   const setupEventListeners = () => {
-    window.addEventListener('keydown', keydownHandler);
-    window.addEventListener('keyup', keyupHandler);
+    window.addEventListener('keydown', keydownHandler, { passive: true });
+    window.addEventListener('keyup', keyupHandler, { passive: true });
 
-    container.addEventListener('wheel', wheelHandler);
-    container.addEventListener('pointerdown', pointerdownHandler);
-    container.addEventListener('pointerup', pointerupHandler);
-    container.addEventListener('pointermove', pointermoveHandler);
-    container.addEventListener('pointercancel', pointercancelHandler);
-    container.addEventListener('contextmenu', contextmenuHandler);
+    container.addEventListener('wheel', wheelHandler, { passive: true });
+    container.addEventListener('pointerdown', pointerdownHandler, {
+      passive: true
+    });
+    container.addEventListener('pointerup', pointerupHandler, {
+      passive: true
+    });
+    container.addEventListener('pointermove', pointermoveHandler, {
+      passive: true
+    });
+    container.addEventListener('pointercancel', pointercancelHandler, {
+      passive: true
+    });
+    container.addEventListener('contextmenu', contextmenuHandler, {
+      passive: true
+    });
 
-    document.addEventListener('pointerlockchange', pointerlockchangeHandler);
-    document.addEventListener('pointerlockerror', pointerlockerrorHandler);
+    document.addEventListener('pointerlockchange', pointerlockchangeHandler, {
+      passive: true
+    });
+    document.addEventListener('pointerlockerror', pointerlockerrorHandler, {
+      passive: true
+    });
 
     return () => {
       window.removeEventListener('keydown', keydownHandler);

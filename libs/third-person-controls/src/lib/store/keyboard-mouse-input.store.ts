@@ -18,7 +18,8 @@ export type DefaultKeyPressWatching = keyof typeof DEFAULT_KEY_MAPPINGS;
 
 export const DEFAULT_KEY_TRIGGERS = {
   jump: ['SpaceDown'],
-  toggleWalk: ['ShiftLeftDown', 'ShiftRightDown']
+  toggleMoveMode: ['ShiftLeftDown', 'ShiftRightDown'],
+  interact: ['keyF']
 } as const;
 
 export type DefaultKeyTriggers = keyof typeof DEFAULT_KEY_TRIGGERS;

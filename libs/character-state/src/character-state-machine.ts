@@ -25,6 +25,7 @@ import {
 } from './states/interactions';
 import { fallingState, jumpingState } from './states/jumping';
 import { movingState } from './states/moving';
+import { rotatingState } from './states/rotating';
 import { ActionName } from './types/action';
 import { CharacterAnimation, CharacterStateContext } from './types/context';
 import { TransitionEvent } from './types/event';
@@ -41,7 +42,11 @@ export const characterStateMachine = createMachine<
     id: 'CharacterState',
     initial: StateName.IDLE,
     context: {
+      velocity: [0, 0, 0],
+      position: [0, 0, 0],
+      facing: [0, 0, 0],
       grounded: true,
+      jumping: false,
       moveMode: CharacterMoveMode.WALKING,
       allowMoving: false,
       allowRotation: false,
@@ -55,6 +60,7 @@ export const characterStateMachine = createMachine<
     states: {
       [StateName.IDLE]: idleState,
       [StateName.MOVING]: movingState,
+      [StateName.ROTATING]: rotatingState,
       [StateName.JUMPING]: jumpingState,
       [StateName.FALLING]: fallingState,
       [StateName.INTERRUPTIBLE_INTERACTION]: interruptibleInteractionState,
@@ -92,4 +98,4 @@ export const characterStateMachine = createMachine<
 );
 
 export type CharacterStateMachine = typeof characterStateMachine;
-export { CharacterStateEventType, CharacterStateContext };
+export { CharacterStateEventType, CharacterStateContext, ActionName };

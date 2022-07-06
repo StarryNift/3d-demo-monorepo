@@ -3,29 +3,29 @@ import { CharacterStateEventType } from '../constant/event.enum';
 import { CharacterAnimation, CharacterStateContext } from '../types/context';
 import { TransitionEvent } from '../types/event';
 import { GuardName } from '../types/guard';
-import { BasicState, StateName } from '../types/state';
+import { MovingState, StateName } from '../types/state';
 
 /**
- * 人物静止状态
+ * 人物转向中状态
  */
-export const idleState: StateNodeConfig<
+export const rotatingState: StateNodeConfig<
   CharacterStateContext,
-  BasicState,
+  MovingState,
   TransitionEvent
 > = {
   entry: assign({
-    animation: CharacterAnimation.IDLE
+    animation: CharacterAnimation.ROTATING
   }),
   on: {
+    [CharacterStateEventType.CANCEL]: {
+      target: StateName.IDLE
+    },
     [CharacterStateEventType.MOVE]: {
       target: StateName.MOVING
     },
-    [CharacterStateEventType.ROTATE]: {
-      target: StateName.ROTATING
-    },
     [CharacterStateEventType.JUMP]: {
-      // cond: GuardName.CAN_JUMP,
-      target: StateName.JUMPING
+      target: StateName.JUMPING,
+      cond: GuardName.CAN_JUMP
     },
     [CharacterStateEventType.INTERRUPTIBLE_INTERACTION]: {
       target: StateName.INTERRUPTIBLE_INTERACTION
@@ -36,8 +36,5 @@ export const idleState: StateNodeConfig<
     [CharacterStateEventType.FLOAT]: {
       target: StateName.FLOATING
     }
-  },
-  meta: {
-    animation: 'idle'
   }
 };

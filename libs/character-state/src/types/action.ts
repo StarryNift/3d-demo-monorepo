@@ -8,5 +8,25 @@ export enum ActionName {
   LOCK = 'lock',
   UNLOCK = 'unlock',
   LEFT_GROUND = 'leftGround',
-  GROUNDED = 'grounded'
+  GROUNDED = 'grounded',
+
+  /**
+   * Setup character rigid body
+   */
+  ATTACH_RIGID_BODY = 'AttachRigidBody',
+
+  /**
+   * Update direction where the character is facing
+   */
+  LOOK_AT = 'lookAt',
+
+  /**
+   * Update velocity of the character
+   */
+  UPDATE_VELOCITY = 'updateVelocity',
+
+  /**
+   * Perform actual jump (Apply initial velocity)
+   */
+  JUMP = 'jump'
 }

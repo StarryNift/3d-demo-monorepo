@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import { CharacterStateMachine } from '@3d/character-state';
+import { useEffect, useRef } from 'react';
+import { InterpreterFrom } from 'xstate';
 import shallow from 'zustand/shallow';
 import {
   DefaultKeyPressWatching,
@@ -7,19 +9,22 @@ import {
   DEFAULT_KEY_TRIGGERS,
   useKeyboardMouseMoveStore
 } from '../store/keyboard-mouse-input.store';
+import { EventEmitter } from 'fbemitter';
 import { reverseKeyMapping } from '../utility/reverse-key-mapping';
 import { InputEventManager } from './use-input-event-manager';
+
 /**
- * Keyboard event input => input event manager => camera & character
+ * Keyboard event receiver
  * @param inputManager
  * @param userKeyMapPressing Key mapping for keys currently pressing
  * @returns
  */
 export default function useKeyboardInput<T extends string>(
   inputManager: InputEventManager,
+  eventBus: EventEmitter,
   userKeyMapPressing: Partial<Record<T, string | string[]>> = {},
   userKeyMapTriggers: Partial<Record<T, string[]>> = {}
-): Partial<Record<DefaultKeyPressWatching | T | 'isMouseLooking', boolean>> {
+) {
   /**
    * Key mapping for keys currently pressing
    */
@@ -53,16 +58,16 @@ export default function useKeyboardInput<T extends string>(
   );
 
   const {
-    inputsPressing,
-    isMouseLooking,
+    // inputsPressing,
+    // isMouseLooking,
     setPressed,
     setReleased,
     setIsMouseLooking,
     setActionTriggered
   } = useKeyboardMouseMoveStore(
     state => ({
-      inputsPressing: state.inputsPressing,
-      isMouseLooking: state.isMouseLooking,
+      // inputsPressing: state.inputsPressing,
+      // isMouseLooking: state.isMouseLooking,
       setPressed: state.setPressed,
       setReleased: state.setReleased,
       setIsMouseLooking: state.setIsMouseLooking,
@@ -84,6 +89,7 @@ export default function useKeyboardInput<T extends string>(
     if (triggered) {
       console.log('keydown', code);
       setActionTriggered(triggered);
+      eventBus.emit('actionTrigger', triggered);
     }
   }
 
@@ -100,6 +106,7 @@ export default function useKeyboardInput<T extends string>(
     if (triggered) {
       console.log('keyup', code);
       setActionTriggered(triggered);
+      eventBus.emit('actionTrigger', triggered);
     }
   };
 
@@ -140,5 +147,5 @@ export default function useKeyboardInput<T extends string>(
     };
   }, []);
 
-  return { ...inputsPressing, isMouseLooking } as any;
+  // return { ...inputsPressing, isMouseLooking } as any;
 }

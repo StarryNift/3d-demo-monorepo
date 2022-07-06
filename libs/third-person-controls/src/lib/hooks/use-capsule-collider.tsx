@@ -1,31 +1,74 @@
+import {
+  CharacterStateEventType,
+  CharacterStateMachine
+} from '@3d/character-state';
 import { useCompoundBody } from '@react-three/cannon';
-import { Vec3 } from 'cannon-es';
+import { Quaternion, Vec3 } from 'cannon-es';
 import { useEffect, useRef } from 'react';
 import { Object3D, Vector3 } from 'three';
+import { InterpreterFrom } from 'xstate';
+import shallow from 'zustand/shallow';
+import { useCharacterKineticStore } from '../store/kinetic-state.store';
 import { useCharacterStateStore } from '../store/use-character-state.store';
 
 const upAxis = new Vec3(0, 1, 0);
 
 // shouldn't rerender if the character model is the same
 export default function useCapsuleCollider(
-  modelRef: React.MutableRefObject<Object3D>
+  modelRef: React.MutableRefObject<Object3D>,
+  /**
+   * Finite state machine for character state.
+   * Character's velocity should be updated here
+   */
+  fsm: InterpreterFrom<CharacterStateMachine>
 ) {
   const setCanJump = useCharacterStateStore(state => state.setCanJump);
+  const colliding = useRef(new Set<Object3D>());
+  const { velocity, setPosition } = useCharacterKineticStore(
+    state => ({
+      velocity: state.velocity,
+      setPosition: state.setPosition
+    }),
+    shallow
+  );
+
   /**
    * 接触点法线向量, 模长为1
    */
   const contactNormal = useRef(new Vec3());
 
-  const velocity = useRef(new Vector3());
+  const freeFallDetector = () => {
+    console.log('checking free fall');
+
+    if (velocity.y < -0.0001 && colliding.current.size === 0) {
+      fsm.send({ type: CharacterStateEventType.FALL });
+    }
+  };
+
+  const freeFallChecker = useRef<NodeJS.Timer>();
+
+  // const velocity = useRef(new Vector3());
+  useEffect(() => {
+    freeFallChecker.current = setInterval(freeFallDetector, 200);
+    return () => clearInterval(freeFallChecker.current);
+  }, []);
 
   useEffect(
     () =>
       collider.velocity.subscribe(v => {
-        velocity.current.set(...v);
-        // console.log('collider velocity', v);
+        velocity.set(...v);
+        // console.log('collider velocity', v[1]);
+
+        // Enter falling
+        // NOTE: There is a issue that velocity.y never reaches 0 with gravity
+        // if (v[1] < -0.0001 && colliding.current.size === 0) {
+        //   fsm.send({ type: CharacterStateEventType.FALL });
+        // }
       }),
     []
   );
+
+  useEffect(() => collider.position.subscribe(p => setPosition(p)), []);
 
   const [, collider] = useCompoundBody(
     () => {
@@ -93,6 +136,8 @@ export default function useCapsuleCollider(
             console.log('can jump', contactNormal.current, dotProduct);
             setCanJump(true);
             // collider.sleep();
+
+            fsm.send({ type: CharacterStateEventType.LANDED });
           } else {
             console.log('cannot jump', contactNormal.current, dotProduct);
           }
@@ -102,32 +147,43 @@ export default function useCapsuleCollider(
           const angleToYAxisDegree = (angleToYAxisRad * 180) / Math.PI;
 
           console.debug('angle to positive y axis: ', angleToYAxisDegree);
+
+          const q = new Quaternion().setFromVectors(
+            upAxis,
+            contactNormal.current
+          );
+          console.log('q', q);
         },
         onCollideBegin(e) {
-          console.log('collide begin', e);
+          colliding.current.add(e.body);
+          console.log('collide begin', e, colliding.current);
+
+          clearInterval(freeFallChecker.current);
+          console.log('clear interval', freeFallChecker.current);
         },
         onCollideEnd(e) {
+          colliding.current.delete(e.body);
           // const v = new Vector3();
           // collider.velocity.copy(v);
-          console.log(
-            'collide end',
-            e,
-            velocity.current,
-            velocity.current.length()
-          );
+          console.log('collide end', e, colliding.current);
 
-          if (velocity.current.y < 0) {
-            console.log('falling start');
+          if (colliding.current.size === 0) {
+            clearInterval(freeFallChecker.current);
+            freeFallChecker.current = setInterval(freeFallDetector, 200);
           }
 
-          if (velocity.current.length() <= 0.05) {
-            console.log('sleeping now');
-          }
+          // if (velocity.y < 0) {
+          //   console.log('falling start', e);
+          // }
+
+          // if (velocity.current.length() <= 0.05) {
+          //   console.log('sleeping now');
+          // }
         },
         position: [0, 0, 0],
         rotation: [0, Math.PI, 0],
-        collisionFilterGroup: 1
-        // collisionFilterMask: 2
+        collisionFilterGroup: 1,
+        collisionFilterMask: 3
       };
     },
     modelRef,

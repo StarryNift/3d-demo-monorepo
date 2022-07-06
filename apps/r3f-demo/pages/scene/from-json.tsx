@@ -102,15 +102,15 @@ const sceneManifest: ManifestJson = {
     //         z: 1.0
     //       }
     //     }
+    //   ],
+    //   physics: [
+    //     {
+    //       bodyType: 'ConvexPolyhedron',
+    //       node: '平面007',
+    //       material: 'ground',
+    //       render: true
+    //     }
     //   ]
-    //   // physics: [
-    //   //   {
-    //   //     bodyType: 'ConvexPolyhedron',
-    //   //     node: '平面007',
-    //   //     material: 'ground',
-    //   //     render: true
-    //   //   }
-    //   // ]
     // },
     {
       src: 'https://starrynift.s3.ap-southeast-1.amazonaws.com/web/3D/MUA/models/V1.5.glb',
@@ -390,6 +390,7 @@ export default function SceneFromJson() {
   return (
     <PageContainer>
       <Canvas
+        shadows
         onCreated={handleCreated}
         resize={{ debounce: { scroll: 0, resize: 0 } }}
       >

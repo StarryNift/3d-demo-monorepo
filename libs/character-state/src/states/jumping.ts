@@ -13,7 +13,27 @@ export const jumpingState: StateNodeConfig<
   BasicState,
   TransitionEvent
 > = {
-  entry: ActionName.LEFT_GROUND
+  entry: [
+    assign<CharacterStateContext>({
+      animation: CharacterAnimation.JUMPING,
+      jumping: true
+    }),
+    ActionName.JUMP
+  ],
+  exit: [
+    assign<CharacterStateContext>({
+      jumping: false
+    })
+  ],
+  on: {
+    [CharacterStateEventType.JUMPED]: {
+      actions: [ActionName.LEFT_GROUND]
+    },
+    [CharacterStateEventType.LANDED]: {
+      target: StateName.IDLE,
+      actions: [ActionName.GROUNDED]
+    }
+  }
 };
 
 /**
@@ -24,11 +44,13 @@ export const fallingState: StateNodeConfig<
   BasicState,
   TransitionEvent
 > = {
-  entry: assign<CharacterStateContext>({
-    animation: CharacterAnimation.FALLING,
-    grounded: false
-  }),
-  exit: ActionName.GROUNDED,
+  entry: [
+    assign<CharacterStateContext>({
+      animation: CharacterAnimation.FALLING,
+      grounded: false
+    })
+  ],
+  exit: [ActionName.GROUNDED],
   on: {
     [CharacterStateEventType.LANDED]: {
       target: StateName.IDLE

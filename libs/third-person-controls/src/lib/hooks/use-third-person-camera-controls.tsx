@@ -160,6 +160,7 @@ class ThirdPersonCameraControls {
     // copy maths to actual three.js camere
     this.camera.position.copy(this.getCameraPosition(rayResult));
     this.camera.lookAt(this.getCameraLookVec());
+    // this.camera.updateProjectionMatrix();
   }
 
   getZoomScale() {
@@ -555,7 +556,7 @@ export default function useThirdPersonCameraControls({
 }: {
   camera: PerspectiveCamera;
   domElement: HTMLCanvasElement;
-  target: Object3D;
+  target: MutableRefObject<Object3D>;
   inputManager: InputEventManager;
   cameraOptions: any;
   cameraContainer: MutableRefObject<Object3D>;
@@ -563,13 +564,13 @@ export default function useThirdPersonCameraControls({
   const [controls, setControls] = useState<ThirdPersonCameraControls>();
 
   useEffect(() => {
-    if (!target) {
+    if (!target.current) {
       return;
     }
     const newControls = new ThirdPersonCameraControls(
       camera,
       domElement,
-      target,
+      target.current,
       inputManager,
       { yOffset: cameraOptions.yOffset || 0 },
       cameraContainer.current
@@ -582,6 +583,8 @@ export default function useThirdPersonCameraControls({
       newControls.dispose();
     };
   }, [camera, domElement, target]);
+
+  console.log('render camera controls');
 
   return controls;
 }
