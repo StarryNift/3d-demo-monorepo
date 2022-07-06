@@ -22,7 +22,8 @@ export interface PhysicsDescriptor {
 
 export interface ModelTransform {
   position: Vector3;
-  eulerAngles: Vector3;
+  // eulerAngles?: Vector3;
+  quaternion: { x: number; y: number; z: number; w: number };
   scale: Vector3;
 }
 
@@ -34,4 +35,5 @@ export interface ModelManifest {
 
 export interface ManifestJson {
   models: ModelManifest[];
+  environment: any;
 }

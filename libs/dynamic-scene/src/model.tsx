@@ -30,7 +30,7 @@ export const Model = memo((props: ModelProps) => {
 
   const ref = useRef<Group>(null);
 
-  const { position, eulerAngles, scale } = transforms[0];
+  const { position, quaternion, scale } = transforms[0];
 
   const onClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
@@ -68,7 +68,7 @@ export const Model = memo((props: ModelProps) => {
           };
 
           // Mesh will be used as collider mesh only, thus will be removed from scene
-          sceneFiltered.remove(match);
+          match.removeFromParent();
           // match.visible = colliderDescriptor.render ?? false;
 
           // Add parent position to collider position
@@ -94,11 +94,7 @@ export const Model = memo((props: ModelProps) => {
         castShadow
         receiveShadow
         position={[-position.x, position.y, position.z]}
-        rotation={[
-          MathUtils.degToRad(eulerAngles.x),
-          -MathUtils.degToRad(eulerAngles.y),
-          MathUtils.degToRad(eulerAngles.z)
-        ]}
+        quaternion={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
         {...(props.debug ? { onClick } : {})}
         scale={[scale.x, scale.y, scale.z]}
       >
@@ -116,10 +112,11 @@ export const Model = memo((props: ModelProps) => {
                 physics={collider.physics}
                 parentTransform={{
                   position: { x: -position.x, y: position.y, z: position.z },
-                  eulerAngles: {
-                    x: MathUtils.degToRad(eulerAngles.x),
-                    y: -MathUtils.degToRad(eulerAngles.y),
-                    z: MathUtils.degToRad(eulerAngles.z)
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w
                   },
                   scale
                 }}
@@ -133,10 +130,11 @@ export const Model = memo((props: ModelProps) => {
                 physics={collider.physics}
                 parentTransform={{
                   position: { x: -position.x, y: position.y, z: position.z },
-                  eulerAngles: {
-                    x: MathUtils.degToRad(eulerAngles.x),
-                    y: -MathUtils.degToRad(eulerAngles.y),
-                    z: MathUtils.degToRad(eulerAngles.z)
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w
                   },
                   scale
                 }}

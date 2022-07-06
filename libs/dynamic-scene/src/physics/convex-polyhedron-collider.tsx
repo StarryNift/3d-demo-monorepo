@@ -35,7 +35,7 @@ export const ConvexPolyhedronCollider = memo(
     material,
     parentTransform = {
       position: { x: 0, y: 0, z: 0 },
-      eulerAngles: { x: 0, y: 0, z: 0 },
+      quaternion: { x: 0, y: 0, z: 0, w: 1 },
       scale: { x: 0, y: 0, z: 0 }
     }
   }: ConvexPolyhedronColliderProps) => {
