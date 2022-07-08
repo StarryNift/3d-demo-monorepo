@@ -12,9 +12,10 @@ const inputJson = JSON.parse(inputText.replace(/^\ufeff/g,""));
 
 const outputJson = {
   models: inputJson.models.map(model => ({
-    src: `https://starrynift.s3.ap-southeast-1.amazonaws.com/web/3D/mua_dao/${model.src}`,
+    src: `https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/${model.src}`,
+    name: model.src.replace(/^models\//, ''),
     transforms: model.transforms.map(transform => ({
-      position: transform.position,
+      position: { x: -transform.position.x, y: transform.position.y, z: transform.position.z },
       scale: transform.scale,
       quaternion: transform.rotation,
     })),

@@ -29,6 +29,7 @@ export interface ModelTransform {
 
 export interface ModelManifest {
   src: string;
+  name: string;
   transforms: Array<ModelTransform>;
   physics?: Array<PhysicsDescriptor>;
 }

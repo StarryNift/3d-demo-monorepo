@@ -1,17 +1,19 @@
 import { useGLTF } from '@react-three/drei';
 import { ThreeEvent } from '@react-three/fiber';
 import { isArray } from 'lodash';
-import { memo, useMemo, useRef } from 'react';
-import { Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from 'three';
-import { MathUtils } from 'three';
+import { memo, MutableRefObject, useMemo, useRef } from 'react';
+import { Group, Mesh, MeshStandardMaterial, Object3D } from 'three';
 import type { GLTF } from 'three-stdlib/loaders/GLTFLoader';
 import shallow from 'zustand/shallow';
+import { useSceneMesh } from './hook/use-scene-mesh';
 import { ConvexPolyhedronCollider } from './physics/convex-polyhedron-collider';
 import { TrimeshCollider } from './physics/trimesh-collider';
 import { ModelManifest, PhysicsDescriptor } from './types/manifest';
 
 export interface ModelProps {
   manifest: ModelManifest;
+  castShadow?: boolean;
+  receiveShadow?: boolean;
   debug: boolean;
 }
 
@@ -24,21 +26,43 @@ function isMesh(node?: Object3D): node is Mesh {
   return (node as Mesh)?.isMesh;
 }
 
+const handleDebug = (
+  event: ThreeEvent<MouseEvent>,
+  props: ModelProps,
+  ref: MutableRefObject<Group | null>
+) => {
+  event.stopPropagation();
+  console.log(`Click on model: ${props.manifest.src}`, event, ref?.current);
+};
+
 export const Model = memo((props: ModelProps) => {
-  const { src, transforms } = props.manifest;
-  const { scene, nodes, materials } = useGLTF(src) as GLTFModel;
+  const { src, name, transforms } = props.manifest;
+  const { scene, nodes } = useGLTF(src) as GLTFModel;
 
   const ref = useRef<Group>(null);
 
   const { position, quaternion, scale } = transforms[0];
 
-  const onClick = (event: ThreeEvent<MouseEvent>) => {
-    event.stopPropagation();
-    console.log(`Click on model: ${props.manifest.src}`, event, ref.current);
-  };
+  const addModel = useSceneMesh(state => state.addModel);
 
   const [sceneFiltered, colliders] = useMemo(() => {
     const sceneFiltered = scene.clone();
+
+    const meshes: Record<string, Mesh> = {};
+
+    sceneFiltered.traverse(sceneNode => {
+      if (isMesh(sceneNode)) {
+        meshes[sceneNode.name] = sceneNode;
+
+        // Apply shadows
+        sceneNode.castShadow = props.castShadow ?? false;
+        sceneNode.receiveShadow = props.receiveShadow ?? false;
+      }
+    });
+
+    // Store references of meshes in store for later use
+    addModel(name, meshes);
+
     const colliders: Record<
       string,
       { physics: PhysicsDescriptor; mesh: Mesh }
@@ -69,10 +93,6 @@ export const Model = memo((props: ModelProps) => {
 
           // Mesh will be used as collider mesh only, thus will be removed from scene
           match.removeFromParent();
-          // match.visible = colliderDescriptor.render ?? false;
-
-          // Add parent position to collider position
-          // match.position.add(new Vector3(-position.x, position.y, position.z));
         } else {
           console.error(
             `collider not found in ${props.manifest.src} :`,
@@ -93,9 +113,9 @@ export const Model = memo((props: ModelProps) => {
         ref={ref}
         castShadow
         receiveShadow
-        position={[-position.x, position.y, position.z]}
+        position={[position.x, position.y, position.z]}
         quaternion={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
-        {...(props.debug ? { onClick } : {})}
+        {...(props.debug ? { onClick: e => handleDebug(e, props, ref) } : {})}
         scale={[scale.x, scale.y, scale.z]}
       >
         <primitive object={sceneFiltered} dispose={null} />
@@ -111,7 +131,7 @@ export const Model = memo((props: ModelProps) => {
                 node={collider.mesh}
                 physics={collider.physics}
                 parentTransform={{
-                  position: { x: -position.x, y: position.y, z: position.z },
+                  position: { x: position.x, y: position.y, z: position.z },
                   quaternion: {
                     x: quaternion.x,
                     y: quaternion.y,
@@ -129,7 +149,7 @@ export const Model = memo((props: ModelProps) => {
                 node={collider.mesh}
                 physics={collider.physics}
                 parentTransform={{
-                  position: { x: -position.x, y: position.y, z: position.z },
+                  position: { x: position.x, y: position.y, z: position.z },
                   quaternion: {
                     x: quaternion.x,
                     y: quaternion.y,

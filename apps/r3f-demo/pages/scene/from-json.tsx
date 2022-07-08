@@ -1,5 +1,5 @@
 import { ThirdPersonControls } from '@3d/third-person-controls';
-import { DynamicScene, ManifestJson } from '@3d/dynamic-scene';
+import { DynamicScene, ManifestJson, useSceneMesh } from '@3d/dynamic-scene';
 import { Debug, Physics } from '@react-three/cannon';
 import {
   ArcballControls,
@@ -92,6 +92,16 @@ export function Character() {
   );
 }
 
+export function SceneScripts() {
+  const getMesh = useSceneMesh(state => state.getMesh);
+
+  useEffect(() => {
+    console.log('getMesh', getMesh('Pictures.glb', 'MAhmadM8458429'));
+  });
+
+  return null;
+}
+
 export default function SceneFromJson() {
   const cameraRef = useRef<PerspectiveCameraProps>();
 
@@ -106,12 +116,31 @@ export default function SceneFromJson() {
         onCreated={handleCreated}
         resize={{ debounce: { scroll: 0, resize: 0 } }}
       >
+        <ambientLight
+          intensity={0.28}
+          color={'#D5c9AE'}
+          position={[-8.525, 50.726, 53.558]}
+        />
         <directionalLight
-          color={'white'}
+          color={'#d4945b'}
           shadow-mapSize-height={4096}
           shadow-mapSize-width={4096}
-          intensity={0.86}
-          position={[-7.014, 74.508, 49.297]}
+          intensity={0.42}
+          position={[-84.797, 40.178, 68.837]}
+          shadow-camera-far={200}
+          shadow-camera-left={-80}
+          shadow-camera-right={80}
+          shadow-camera-top={200}
+          shadow-camera-bottom={-100}
+          shadow-camera-near={0.1}
+          shadow-normalBias={0.3}
+        />
+        <directionalLight
+          color={'#d4945b'}
+          shadow-mapSize-height={4096}
+          shadow-mapSize-width={4096}
+          intensity={0.68}
+          position={[-36.48, 27.5, 52.2]}
           castShadow
           shadow-camera-far={200}
           shadow-camera-left={-50}
@@ -123,11 +152,16 @@ export default function SceneFromJson() {
         />
         <Suspense fallback={null}>
           <Physics gravity={[0, -10, 0]}>
-            {/* <Debug color="lime"> */}
-            <Suspense fallback={null}>
-              <DynamicScene debug={true} manifest={sceneManifest} sceneId={3} />
-            </Suspense>
-            {/* </Debug> */}
+            <Debug color="lime">
+              <Suspense fallback={null}>
+                <DynamicScene
+                  debug={true}
+                  manifest={sceneManifest}
+                  sceneId={3}
+                />
+                <SceneScripts />
+              </Suspense>
+            </Debug>
             <Character />
           </Physics>
         </Suspense>

@@ -13,7 +13,13 @@ export function DynamicScene({ sceneId, manifest, debug = false }: SceneProps) {
   return (
     <>
       {manifest.models.map(model => (
-        <Model key={model.src} debug={debug} manifest={model} />
+        <Model
+          key={model.name}
+          castShadow
+          receiveShadow
+          debug={debug}
+          manifest={model}
+        />
       ))}
     </>
   );
