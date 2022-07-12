@@ -126,6 +126,44 @@
           "material": "wall",
           "render": false
         }
+      ],
+      "events": [
+        {
+          "node": "picture033",
+          "event": "enter",
+          "handler": "handler1"
+        },
+        {
+          "node": "picture033",
+          "event": "leave",
+          "handler": "handler2"
+        },
+        {
+          "node": "picture034",
+          "event": "enter",
+          "handler": "handler1"
+        },
+        {
+          "node": "picture034",
+          "event": "leave",
+          "handler": "handler2"
+        },
+        {
+          "node": "picture035",
+          "event": "enter",
+          "handler": "handler1",
+          "maxDistance": 15
+        },
+        {
+          "node": "picture035",
+          "event": "leave",
+          "handler": "handler2"
+        },
+        {
+          "node": "picture035",
+          "event": "click",
+          "handler": "handler3"
+        }
       ]
     },
     {

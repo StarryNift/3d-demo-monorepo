@@ -1,7 +1,7 @@
 import type { ConvexPolyhedronProps } from '@react-three/cannon';
 import { useConvexPolyhedron } from '@react-three/cannon';
 import { memo, useMemo } from 'react';
-import { BufferGeometry, Mesh, MeshStandardMaterial } from 'three';
+import type { BufferGeometry, Mesh, MeshStandardMaterial } from 'three';
 import { Geometry } from 'three-stdlib';
 import shallow from 'zustand/shallow';
 import type { ModelTransform, PhysicsDescriptor } from '../types/manifest';

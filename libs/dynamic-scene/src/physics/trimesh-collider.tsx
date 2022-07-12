@@ -1,6 +1,6 @@
 import { useTrimesh } from '@react-three/cannon';
 import { memo } from 'react';
-import { Mesh, MeshStandardMaterial } from 'three';
+import type { Mesh, MeshStandardMaterial } from 'three';
 import shallow from 'zustand/shallow';
 import type { ModelTransform, PhysicsDescriptor } from '../types/manifest';
 

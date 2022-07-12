@@ -20,6 +20,28 @@ export interface PhysicsDescriptor {
   render?: boolean;
 }
 
+export interface EventDescriptor {
+  /**
+   * Name of the sub-mesh that will receive the event.
+   */
+  node: string;
+  /**
+   * Event name.
+   */
+  event: 'leave' | 'enter' | 'click';
+
+  /**
+   * Name of custom event handler.
+   */
+  handler: string;
+
+  /**
+   * Max distance allowed to trigger the event.
+   * NOTE: distance is measured from the center of the camera.
+   */
+  maxDistance?: number;
+}
+
 export interface ModelTransform {
   position: Vector3;
   // eulerAngles?: Vector3;
@@ -32,6 +54,7 @@ export interface ModelManifest {
   name: string;
   transforms: Array<ModelTransform>;
   physics?: Array<PhysicsDescriptor>;
+  events?: Array<EventDescriptor>;
 }
 
 export interface ManifestJson {

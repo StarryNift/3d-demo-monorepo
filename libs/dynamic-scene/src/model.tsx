@@ -1,10 +1,10 @@
 import { useGLTF } from '@react-three/drei';
-import { ThreeEvent } from '@react-three/fiber';
 import { isArray } from 'lodash';
-import { memo, MutableRefObject, useMemo, useRef } from 'react';
-import { Group, Mesh, MeshStandardMaterial, Object3D } from 'three';
+import { memo, useMemo, useRef } from 'react';
+import type { Group, Mesh, MeshStandardMaterial, Object3D } from 'three';
 import type { GLTF } from 'three-stdlib/loaders/GLTFLoader';
 import shallow from 'zustand/shallow';
+import { composeEventHandlers } from './events/handler';
 import { useSceneMesh } from './hook/use-scene-mesh';
 import { ConvexPolyhedronCollider } from './physics/convex-polyhedron-collider';
 import { TrimeshCollider } from './physics/trimesh-collider';
@@ -26,14 +26,14 @@ function isMesh(node?: Object3D): node is Mesh {
   return (node as Mesh)?.isMesh;
 }
 
-const handleDebug = (
-  event: ThreeEvent<MouseEvent>,
-  props: ModelProps,
-  ref: MutableRefObject<Group | null>
-) => {
-  event.stopPropagation();
-  console.log(`Click on model: ${props.manifest.src}`, event, ref?.current);
-};
+// const handleDebug = (
+//   event: ThreeEvent<MouseEvent>,
+//   props: ModelProps,
+//   ref: MutableRefObject<Group | null>
+// ) => {
+//   event.stopPropagation();
+//   console.log(`Click on model: ${props.manifest.src}`, event, ref?.current);
+// };
 
 export const Model = memo((props: ModelProps) => {
   const { src, name, transforms } = props.manifest;
@@ -105,6 +105,12 @@ export const Model = memo((props: ModelProps) => {
     return [sceneFiltered, colliders];
   }, [scene]);
 
+  const handlers = useMemo(
+    () =>
+      props.manifest.events ? composeEventHandlers(props.manifest.events) : {},
+    [props.manifest]
+  );
+
   console.log('sceneFiltered', props.manifest.src, sceneFiltered, colliders);
 
   return (
@@ -115,7 +121,8 @@ export const Model = memo((props: ModelProps) => {
         receiveShadow
         position={[position.x, position.y, position.z]}
         quaternion={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
-        {...(props.debug ? { onClick: e => handleDebug(e, props, ref) } : {})}
+        // {...(props.debug ? { onClick: e => handleDebug(e, props, ref) } : {})}
+        {...handlers}
         scale={[scale.x, scale.y, scale.z]}
       >
         <primitive object={sceneFiltered} dispose={null} />

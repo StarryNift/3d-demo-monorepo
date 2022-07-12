@@ -1,49 +1,20 @@
 import { ThirdPersonControls } from '@3d/third-person-controls';
 import {
-  BodyProps,
   BoxProps,
   CylinderProps,
   Debug,
   Physics,
   SphereProps,
-  Triplet,
   useBox,
   useCylinder,
-  useRaycastAll,
-  useRaycastClosest,
-  useSphere,
-  WorldProps
+  useSphere
 } from '@react-three/cannon';
-import { PhysicsProviderProps } from '@react-three/cannon/dist/physics-provider';
 import { useAnimations, useGLTF } from '@react-three/drei';
-import {
-  BoxGeometryProps,
-  Canvas,
-  extend,
-  MeshPhongMaterialProps,
-  MeshProps,
-  NodeProps,
-  Object3DNode,
-  RootState,
-  useGraph
-} from '@react-three/fiber';
-import { ContactMaterial } from 'cannon-es';
-import { useControls } from 'leva';
+import { Canvas, RootState, useGraph } from '@react-three/fiber';
 import { keyboardMouseMoveStore } from 'libs/third-person-controls/src/lib/store/keyboard-mouse-input.store';
-import { Ref, useEffect } from 'react';
-import { Suspense, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import {
-  BufferGeometry,
-  Group,
-  Mesh,
-  Vector3,
-  Line as ThreeLine,
-  WebGL1Renderer,
-  WebGLRenderer,
-  MeshPhongMaterialParameters,
-  MeshPhongMaterial
-} from 'three';
+import { Group, Mesh, MeshPhongMaterial } from 'three';
 
 function Floor() {
   const [ref] = useBox<Mesh>(() => ({

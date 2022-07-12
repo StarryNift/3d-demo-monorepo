@@ -1,4 +1,4 @@
-import { Mesh } from 'three';
+import type { Mesh } from 'three';
 import create from 'zustand';
 
 export type GroupedMeshes = Record<string, Mesh>;

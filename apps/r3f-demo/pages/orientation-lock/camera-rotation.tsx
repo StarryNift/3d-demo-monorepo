@@ -26,7 +26,10 @@ function Box(props: Partial<MeshProps>) {
       {...props}
       ref={mesh}
       scale={active ? 1.5 : 1}
-      onClick={event => setActive(!active)}
+      onClick={event => {
+        console.log('click', event);
+        setActive(!active);
+      }}
       onPointerOver={event => {
         console.log(event);
         setHover(true);

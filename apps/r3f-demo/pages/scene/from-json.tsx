@@ -1,5 +1,10 @@
+import {
+  ManifestJson,
+  ProxyEventHandlers,
+  useEventHandlerStore
+} from '@3d/dynamic-scene';
+import { DynamicScene, useSceneMesh } from '@3d/dynamic-scene';
 import { ThirdPersonControls } from '@3d/third-person-controls';
-import { DynamicScene, ManifestJson, useSceneMesh } from '@3d/dynamic-scene';
 import { Debug, Physics } from '@react-three/cannon';
 import {
   ArcballControls,
@@ -13,9 +18,10 @@ import {
   RootState,
   useGraph
 } from '@react-three/fiber';
+import { button, useControls } from 'leva';
 import { Suspense, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { Group } from 'three';
+import type { Group } from 'three';
 import sceneJson from '../../assets/scene.json';
 
 const sceneManifest: ManifestJson = sceneJson as any;
@@ -102,11 +108,51 @@ export function SceneScripts() {
   return null;
 }
 
+export function HandlerOverride() {
+  const setHandlers = useEventHandlerStore(state => state.setHandlers);
+  useControls({
+    randomValue: {
+      value: 0
+    },
+    override: button(get => {
+      console.log('override', get);
+      const r = get('randomValue');
+
+      setHandlers({
+        handler3(event) {
+          console.log('handler3 override', event);
+          console.log('current random value:', r);
+          console.log('click', event.target.name);
+        }
+      });
+
+      console.log('override', r);
+    })
+  });
+
+  return null;
+}
+
 export default function SceneFromJson() {
   const cameraRef = useRef<PerspectiveCameraProps>();
 
-  const handleCreated = (scene: RootState) => {
-    console.log(scene, cameraRef.current);
+  const handleCreated = (state: RootState) => {
+    console.log(state, cameraRef.current);
+  };
+
+  const handlers: ProxyEventHandlers = {
+    handler1(event) {
+      console.log('handler1', event);
+      console.log('active', event.target.name);
+    },
+    handler2(event) {
+      console.log('handler2', event);
+      console.log('inactive', event.target.name);
+    },
+    handler3(event) {
+      console.log('handler3', event);
+      console.log('click', event.target.name);
+    }
   };
 
   return (
@@ -158,14 +204,16 @@ export default function SceneFromJson() {
                   debug={true}
                   manifest={sceneManifest}
                   sceneId={3}
+                  handlers={handlers}
                 />
                 <SceneScripts />
+                <HandlerOverride />
               </Suspense>
             </Debug>
-            <Character />
+            {/* <Character /> */}
           </Physics>
         </Suspense>
-        {/* <PerspectiveCamera
+        <PerspectiveCamera
           ref={cameraRef}
           makeDefault
           near={5}
@@ -175,7 +223,7 @@ export default function SceneFromJson() {
           ]}
           fov={75}
         />
-        <ArcballControls /> */}
+        <ArcballControls />
       </Canvas>
     </PageContainer>
   );
