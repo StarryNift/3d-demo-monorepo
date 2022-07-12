@@ -110,6 +110,8 @@ export function SceneScripts() {
 
 export function HandlerOverride() {
   const setHandlers = useEventHandlerStore(state => state.setHandlers);
+  const getAllColliders = useSceneMesh(state => state.getAllColliders);
+
   useControls({
     randomValue: {
       value: 0
@@ -127,6 +129,10 @@ export function HandlerOverride() {
       });
 
       console.log('override', r);
+    }),
+    printColliders: button(get => {
+      const colliders = getAllColliders();
+      console.log('colliders', colliders);
     })
   });
 

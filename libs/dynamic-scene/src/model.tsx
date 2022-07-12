@@ -44,6 +44,7 @@ export const Model = memo((props: ModelProps) => {
   const { position, quaternion, scale } = transforms[0];
 
   const addModel = useSceneMesh(state => state.addModel);
+  const addCollider = useSceneMesh(state => state.addCollider);
 
   const [sceneFiltered, colliders] = useMemo(() => {
     const sceneFiltered = scene.clone();
@@ -90,6 +91,8 @@ export const Model = memo((props: ModelProps) => {
             physics: colliderDescriptor,
             mesh: match
           };
+
+          addCollider(match);
 
           // Mesh will be used as collider mesh only, thus will be removed from scene
           match.removeFromParent();
