@@ -8,12 +8,16 @@ export interface SceneProps {
   sceneId: number;
   manifest: ManifestJson;
   debug?: boolean;
+  castShadow?: boolean;
+  receiveShadow?: boolean;
   handlers?: Record<string, (event: ProxyEvent) => void>;
 }
 
 export function DynamicScene({
   sceneId,
   manifest,
+  castShadow,
+  receiveShadow,
   handlers = {},
   debug = false
 }: SceneProps) {
@@ -30,8 +34,8 @@ export function DynamicScene({
       {manifest.models.map(model => (
         <Model
           key={model.name}
-          castShadow
-          receiveShadow
+          castShadow={castShadow}
+          receiveShadow={receiveShadow}
           debug={debug}
           manifest={model}
         />

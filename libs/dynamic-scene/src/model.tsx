@@ -93,8 +93,8 @@ export const Model = memo((props: ModelProps) => {
 
           addCollider(match);
 
-          // Mesh will be used as collider mesh only, thus will be removed from scene
-          match.removeFromParent();
+          // Does not render the mesh with the scene, will be handled by the collider component
+          match.visible = false;
         } else {
           console.error(
             `collider not found in ${props.manifest.src} :`,
@@ -137,8 +137,6 @@ export const Model = memo((props: ModelProps) => {
     <>
       <group
         ref={ref}
-        castShadow
-        receiveShadow
         position={[position.x, position.y, position.z]}
         quaternion={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
         // {...(props.debug ? { onClick: e => handleDebug(e, props, ref) } : {})}
