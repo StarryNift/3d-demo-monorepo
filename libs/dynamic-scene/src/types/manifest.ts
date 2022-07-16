@@ -42,6 +42,10 @@ export interface EventDescriptor {
   maxDistance?: number;
 }
 
+export interface AnimationDescriptor {
+  playOnMount?: string;
+}
+
 export interface ModelTransform {
   position: Vector3;
   // eulerAngles?: Vector3;
@@ -55,6 +59,7 @@ export interface ModelManifest {
   transforms: Array<ModelTransform>;
   physics?: Array<PhysicsDescriptor>;
   events?: Array<EventDescriptor>;
+  animation?: AnimationDescriptor;
 }
 
 export interface ManifestJson {

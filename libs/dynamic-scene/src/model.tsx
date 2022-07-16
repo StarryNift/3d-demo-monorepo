@@ -1,6 +1,6 @@
-import { useGLTF } from '@react-three/drei';
+import { useAnimations, useGLTF } from '@react-three/drei';
 import { isArray } from 'lodash';
-import { memo, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import type { Group, Mesh, MeshStandardMaterial, Object3D } from 'three';
 import type { GLTF } from 'three-stdlib/loaders/GLTFLoader';
 import shallow from 'zustand/shallow';
@@ -37,7 +37,7 @@ function isMesh(node?: Object3D): node is Mesh {
 
 export const Model = memo((props: ModelProps) => {
   const { src, name, transforms } = props.manifest;
-  const { scene, nodes } = useGLTF(src) as GLTFModel;
+  const { scene, nodes, animations } = useGLTF(src) as GLTFModel;
 
   const ref = useRef<Group>(null);
 
@@ -46,12 +46,11 @@ export const Model = memo((props: ModelProps) => {
   const addModel = useSceneMesh(state => state.addModel);
   const addCollider = useSceneMesh(state => state.addCollider);
 
-  const [sceneFiltered, colliders] = useMemo(() => {
-    const sceneFiltered = scene.clone();
-
+  const [colliders] = useMemo(() => {
+    // Can not animate if using a cloned scene
     const meshes: Record<string, Mesh> = {};
 
-    sceneFiltered.traverse(sceneNode => {
+    scene.traverse(sceneNode => {
       if (isMesh(sceneNode)) {
         meshes[sceneNode.name] = sceneNode;
 
@@ -71,7 +70,7 @@ export const Model = memo((props: ModelProps) => {
 
     if (isArray(props.manifest.physics) && props.manifest.physics.length > 0) {
       props.manifest.physics.forEach(colliderDescriptor => {
-        const match = sceneFiltered.getObjectByName(colliderDescriptor.node);
+        const match = scene.getObjectByName(colliderDescriptor.node);
 
         console.log(
           'collider',
@@ -105,8 +104,26 @@ export const Model = memo((props: ModelProps) => {
       });
     }
 
-    return [sceneFiltered, colliders];
+    return [colliders];
   }, [scene]);
+
+  const animation = useAnimations(animations, ref);
+
+  useEffect(() => {
+    // Play default animation
+    if (props.manifest.animation?.playOnMount) {
+      const defaultAnimationName = props.manifest.animation?.playOnMount;
+      console.log('play default animation', animations, animation);
+
+      if (animation.actions[defaultAnimationName]) {
+        animation.actions[defaultAnimationName]?.play();
+      } else {
+        console.error(
+          `Animation ${defaultAnimationName} not found in ${props.manifest.src}`
+        );
+      }
+    }
+  }, []);
 
   const handlers = useMemo(
     () =>
@@ -114,7 +131,7 @@ export const Model = memo((props: ModelProps) => {
     [props.manifest]
   );
 
-  console.log('sceneFiltered', props.manifest.src, sceneFiltered, colliders);
+  console.log('sceneFiltered', props.manifest.src, scene, colliders);
 
   return (
     <>
@@ -128,7 +145,7 @@ export const Model = memo((props: ModelProps) => {
         {...handlers}
         scale={[scale.x, scale.y, scale.z]}
       >
-        <primitive object={sceneFiltered} dispose={null} />
+        <primitive object={scene} dispose={null} />
       </group>
       {Object.keys(colliders).map(key => {
         const collider = colliders[key];

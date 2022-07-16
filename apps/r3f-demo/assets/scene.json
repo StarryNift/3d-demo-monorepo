@@ -1,172 +1,6 @@
 {
   "models": [
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building3_longsteps.glb",
-      "name": "Main_building3_longsteps.glb",
-      "transforms": [
-        {
-          "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-          },
-          "quaternion": {
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "w": 1
-          }
-        }
-      ],
-      "physics": [
-        {
-          "bodyType": "Trimesh",
-          "node": "Main_building3_longsteps_collider",
-          "material": "wall",
-          "render": false
-        }
-      ]
-    },
-    {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building9_fountain.glb",
-      "name": "Main_building9_fountain.glb",
-      "transforms": [
-        {
-          "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-          },
-          "quaternion": {
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "w": 1
-          }
-        }
-      ],
-      "physics": [
-        {
-          "bodyType": "Trimesh",
-          "node": "Main_building9_fountain_collider",
-          "material": "wall",
-          "render": false
-        }
-      ]
-    },
-    {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building6_stepPyramid.glb",
-      "name": "Main_building6_stepPyramid.glb",
-      "transforms": [
-        {
-          "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-          },
-          "quaternion": {
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "w": 1
-          }
-        }
-      ],
-      "physics": [
-        {
-          "bodyType": "Trimesh",
-          "node": "Main_building6_stepPyramid_collider",
-          "material": "wall",
-          "render": false
-        }
-      ]
-    },
-    {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building7_layer.glb",
-      "name": "Main_building7_layer.glb",
-      "transforms": [
-        {
-          "position": {
-            "x": 0,
-            "y": 0,
-            "z": 0
-          },
-          "scale": {
-            "x": 1,
-            "y": 1,
-            "z": 1
-          },
-          "quaternion": {
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "w": 1
-          }
-        }
-      ],
-      "physics": [
-        {
-          "bodyType": "Trimesh",
-          "node": "Main_building7_layer_collider",
-          "material": "wall",
-          "render": false
-        }
-      ],
-      "events": [
-        {
-          "node": "picture033",
-          "event": "enter",
-          "handler": "handler1"
-        },
-        {
-          "node": "picture033",
-          "event": "leave",
-          "handler": "handler2"
-        },
-        {
-          "node": "picture034",
-          "event": "enter",
-          "handler": "handler1"
-        },
-        {
-          "node": "picture034",
-          "event": "leave",
-          "handler": "handler2"
-        },
-        {
-          "node": "picture035",
-          "event": "enter",
-          "handler": "handler1",
-          "maxDistance": 15
-        },
-        {
-          "node": "picture035",
-          "event": "leave",
-          "handler": "handler2"
-        },
-        {
-          "node": "picture035",
-          "event": "click",
-          "handler": "handler3"
-        }
-      ]
-    },
-    {
       "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building2_head.glb",
       "name": "Main_building2_head.glb",
       "transforms": [
@@ -199,8 +33,8 @@
       ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/sand.glb",
-      "name": "sand.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building3_longsteps.glb",
+      "name": "Main_building3_longsteps.glb",
       "transforms": [
         {
           "position": {
@@ -224,7 +58,157 @@
       "physics": [
         {
           "bodyType": "Trimesh",
-          "node": "sand_collider",
+          "node": "Main_building3_longsteps_collider",
+          "material": "wall",
+          "render": false
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/jinlongyu.glb",
+      "name": "jinlongyu.glb",
+      "transforms": [
+        {
+          "position": {
+            "x": 38.928,
+            "y": 8.2,
+            "z": 39.953
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": -0.02761582,
+            "z": 0,
+            "w": 0.999618649
+          }
+        }
+      ],
+      "animation": {
+        "playOnMount": "idle"
+      }
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building7_layer.glb",
+      "name": "Main_building7_layer.glb",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "physics": [
+        {
+          "bodyType": "Trimesh",
+          "node": "Main_building7_layer_collider",
+          "material": "wall",
+          "render": false
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/NPC.gltf",
+      "name": "NPC.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": -21.9,
+            "y": 1.79,
+            "z": 48.3
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "physics": [
+        {
+          "bodyType": "Trimesh",
+          "node": "NPC_collider",
+          "material": "wall",
+          "render": false
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/allstars.glb",
+      "name": "allstars.glb",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 51.79,
+            "z": 0
+          },
+          "scale": {
+            "x": 1.4,
+            "y": 1.4,
+            "z": 1.4
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "animation": {
+        "playOnMount": "idle"
+      }
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building9_fountain.gltf",
+      "name": "Main_building9_fountain.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "physics": [
+        {
+          "bodyType": "Trimesh",
+          "node": "Main_building9_fountain_collider",
           "material": "wall",
           "render": false
         }
@@ -263,8 +247,64 @@
       ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/stele.glb",
-      "name": "stele.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building6_stepPyramid.gltf",
+      "name": "Main_building6_stepPyramid.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building4_glassbase.gltf",
+      "name": "Main_building4_glassbase.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "physics": [
+        {
+          "bodyType": "Trimesh",
+          "node": "Main_building4_glassbase_collider",
+          "material": "wall",
+          "render": false
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/stele.gltf",
+      "name": "stele.gltf",
       "transforms": [
         {
           "position": {
@@ -325,6 +365,33 @@
           "render": false
         }
       ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/ankangyu.glb",
+      "name": "ankangyu.glb",
+      "transforms": [
+        {
+          "position": {
+            "x": 31.082,
+            "y": 7.944,
+            "z": 40.709
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 1,
+            "z": 0,
+            "w": 0
+          }
+        }
+      ],
+      "animation": {
+        "playOnMount": "idle.001"
+      }
     },
     {
       "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/wallmix.glb",
@@ -391,8 +458,8 @@
       ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Main_building4_glassbase.glb",
-      "name": "Main_building4_glassbase.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/sand.gltf",
+      "name": "sand.gltf",
       "transforms": [
         {
           "position": {
@@ -416,21 +483,21 @@
       "physics": [
         {
           "bodyType": "Trimesh",
-          "node": "Main_building4_glassbase_collider",
+          "node": "sand_collider",
           "material": "wall",
           "render": false
         }
       ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/plant_layout-f.glb",
-      "name": "plant_layout-f.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/ReinardKirt.gltf",
+      "name": "pictures/ReinardKirt.gltf",
       "transforms": [
         {
           "position": {
-            "x": 1.3,
-            "y": 0,
-            "z": -10.2
+            "x": 0.32,
+            "y": 0.36,
+            "z": -0.09
           },
           "scale": {
             "x": 1,
@@ -444,12 +511,35 @@
             "w": 1
           }
         }
-      ],
-      "physics": []
+      ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/Pictures.glb",
-      "name": "Pictures.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/ArtbyJulsAnn.gltf",
+      "name": "pictures/ArtbyJulsAnn.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0.46,
+            "y": -0.45,
+            "z": 0.2
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/cryptonewnew.gltf",
+      "name": "pictures/cryptonewnew.gltf",
       "transforms": [
         {
           "position": {
@@ -469,18 +559,17 @@
             "w": 1
           }
         }
-      ],
-      "physics": []
+      ]
     },
     {
-      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/NPC.glb",
-      "name": "NPC.glb",
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/Ryuoroe.gltf",
+      "name": "pictures/Ryuoroe.gltf",
       "transforms": [
         {
           "position": {
-            "x": -21.9,
-            "y": 1.79,
-            "z": 48.3
+            "x": 0,
+            "y": 0,
+            "z": 0
           },
           "scale": {
             "x": 1,
@@ -494,17 +583,208 @@
             "w": 1
           }
         }
-      ],
-      "physics": []
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/zennyNFTs.gltf",
+      "name": "pictures/zennyNFTs.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/plant_tree.gltf",
+      "name": "plant_tree.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/grass.gltf",
+      "name": "grass.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/samin_jck.gltf",
+      "name": "pictures/samin_jck.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/PiolinoLenard.gltf",
+      "name": "pictures/PiolinoLenard.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/MAhmadM8458429.gltf",
+      "name": "pictures/MAhmadM8458429.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/Irmanchi11.gltf",
+      "name": "pictures/Irmanchi11.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": -1.2,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/mua_dao/models/pictures/Chebsss04.gltf",
+      "name": "pictures/Chebsss04.gltf",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
     }
   ],
   "environment": {
     "fog": {
       "mode": "linear",
       "color": {
-        "r": 0.813946247,
-        "g": 0.837902546,
-        "b": 0.8584906,
+        "r": 0.641064465,
+        "g": 0.8085801,
+        "b": 0.9245283,
         "a": 1
       },
       "start": 0,

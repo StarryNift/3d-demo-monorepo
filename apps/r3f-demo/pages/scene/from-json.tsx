@@ -204,18 +204,18 @@ export default function SceneFromJson() {
         />
         <Suspense fallback={null}>
           <Physics gravity={[0, -10, 0]}>
-            <Debug color="lime">
-              <Suspense fallback={null}>
-                <DynamicScene
-                  debug={true}
-                  manifest={sceneManifest}
-                  sceneId={3}
-                  handlers={handlers}
-                />
-                <SceneScripts />
-                <HandlerOverride />
-              </Suspense>
-            </Debug>
+            {/* <Debug color="lime"> */}
+            <Suspense fallback={null}>
+              <DynamicScene
+                debug={true}
+                manifest={sceneManifest}
+                sceneId={3}
+                handlers={handlers}
+              />
+              <SceneScripts />
+              <HandlerOverride />
+            </Suspense>
+            {/* </Debug> */}
             {/* <Character /> */}
           </Physics>
         </Suspense>
