@@ -6,6 +6,7 @@
     "dynamic-scene": "libs/dynamic-scene",
     "physic-material": "libs/physic-material",
     "r3f-demo": "apps/r3f-demo",
+    "text-sprite": "libs/text-sprite",
     "third-person-controls": "libs/third-person-controls"
   }
 }

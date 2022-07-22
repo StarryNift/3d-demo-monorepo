@@ -42,6 +42,9 @@ export function Index() {
           XState: Character State Machine
         </Link>
       </p>
+      <p>
+        <Link href="/ray/lookat">Ray: LookAt</Link>
+      </p>
     </div>
   );
 }
