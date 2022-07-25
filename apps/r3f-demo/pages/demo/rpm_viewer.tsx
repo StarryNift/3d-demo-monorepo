@@ -1,9 +1,10 @@
-import { OrbitControls, useAnimations, useGLTF } from '@react-three/drei';
-import { Canvas, RootState } from '@react-three/fiber';
-import { useControls } from 'leva';
-import { Suspense, useEffect, useRef } from 'react';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { Leva, useControls } from 'leva';
+import { Suspense, useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import type { Group } from 'three';
+import { AnimationMixer } from 'three';
 import create from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
@@ -15,6 +16,7 @@ export interface CharacterViewerStoreProps {
 
 const useCharacterViewerStore = create<CharacterViewerStoreProps>()(
   subscribeWithSelector((set, get) => ({
+    // 'https://d1a370nemizbjq.cloudfront.net/4c031014-abbc-43b1-8cce-e846dc2ee234.glb'
     url: 'https://d1a370nemizbjq.cloudfront.net/13dab571-c2b7-4074-92de-da0f34631608.glb',
     animationUrl: '/rpm_animations.glb',
     animation: 'Idle'
@@ -32,7 +34,35 @@ export function Character() {
 
   const { scene } = useGLTF(url);
   const { animations } = useGLTF(animationUrl);
-  const { names, actions, mixer } = useAnimations(animations, modelRef);
+
+  // Similar logics inside useAnimations
+  const { names, actions, mixer } = useMemo(() => {
+    // NOTE: AnimationMixer is bound to the model
+    const mixer = new AnimationMixer(scene);
+    const lazyActions = {};
+
+    const actions = {};
+    animations.forEach(clip =>
+      Object.defineProperty(actions, clip.name, {
+        enumerable: true,
+
+        get() {
+          return (
+            lazyActions[clip.name] ||
+            (lazyActions[clip.name] = mixer.clipAction(clip, scene))
+          );
+        }
+      })
+    );
+    return {
+      actions,
+      names: animations.map(c => c.name),
+      mixer
+    };
+  }, [scene]);
+
+  // Update animation every frame
+  useFrame((state, delta) => mixer.update(delta));
 
   useEffect(() => {
     const defaultAnimation = useCharacterViewerStore.getState().animation;
@@ -46,7 +76,7 @@ export function Character() {
     const unsub = useCharacterViewerStore.subscribe(
       state => state.animation,
       animation => {
-        console.log('start animation', animation);
+        console.log('start animation', animation, actions[animation]);
         if (prevAnimation) {
           actions[prevAnimation].fadeOut(0.3);
         }
@@ -58,18 +88,20 @@ export function Character() {
 
     return () => {
       if (prevAnimation) {
-        actions[prevAnimation].fadeOut(0.3);
+        actions[prevAnimation]?.fadeOut(0.3);
       }
+
+      mixer.uncacheRoot(scene);
+
+      console.log('cleanup', mixer, scene);
 
       unsub();
     };
-  }, []);
-
-  console.log('render character');
+  }, [mixer]);
 
   return (
-    <group name="character" ref={modelRef}>
-      <primitive object={scene} dispose={null} />
+    <group name="character">
+      <primitive object={scene} ref={modelRef} />
     </group>
   );
 }
@@ -86,7 +118,7 @@ export function Controller() {
     },
     animationUrl: {
       value: animationUrl,
-      disabled: true
+      editable: false
     },
     animation: {
       value: useCharacterViewerStore.getState().animation,
@@ -130,6 +162,7 @@ export default function ThirdPerson() {
         <gridHelper args={[10, 10]} />
         <axesHelper />
       </Canvas>
+      <Leva oneLineLabels={true} />
     </PageContainer>
   );
 }
