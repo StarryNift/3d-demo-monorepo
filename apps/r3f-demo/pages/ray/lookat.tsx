@@ -5,6 +5,7 @@ import { Canvas, RootState, useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Group, Mesh, Object3D, Raycaster } from 'three';
+import { useFrameStep } from '@3d/hooks';
 
 export interface InteractiveProps {
   interactive?: boolean;
@@ -99,7 +100,6 @@ export const PageContainer = styled.div`
 export function Helper() {
   const camera = useThree(state => state.camera);
   const scene = useThree(state => state.scene);
-  let counter = 0;
   const raycaster = useRef<Raycaster>(new Raycaster());
   const lookingAt = useRef<Set<Object3D>>(new Set());
 
@@ -107,52 +107,50 @@ export function Helper() {
     console.log(scene.children);
   });
 
-  useFrame(() => {
-    if (counter++ % 12 === 0) {
-      raycaster.current.setFromCamera(
-        {
-          x: 0,
-          y: 0
-        },
-        camera
-      );
-      raycaster.current.near = 0;
-      const resp = raycaster.current.intersectObjects(
-        scene.children.filter(
-          i =>
-            i.constructor.name !== 'AxesHelper' &&
-            i.constructor.name !== 'GridHelper'
-        ),
-        true
-      );
+  useFrameStep(() => {
+    raycaster.current.setFromCamera(
+      {
+        x: 0,
+        y: 0
+      },
+      camera
+    );
+    raycaster.current.near = 0;
+    const resp = raycaster.current.intersectObjects(
+      scene.children.filter(
+        i =>
+          i.constructor.name !== 'AxesHelper' &&
+          i.constructor.name !== 'GridHelper'
+      ),
+      true
+    );
 
-      lookingAt.current.forEach(o => {
-        const match = resp.find(j => j.object === o);
+    lookingAt.current.forEach(o => {
+      const match = resp.find(j => j.object === o);
 
-        if (!match) {
-          lookingAt.current.delete(o);
-          o.dispatchEvent({
-            target: o,
-            type: 'lookAtEnd'
-          });
-        }
-      });
+      if (!match) {
+        lookingAt.current.delete(o);
+        o.dispatchEvent({
+          target: o,
+          type: 'lookAtEnd'
+        });
+      }
+    });
 
-      resp.forEach(i => {
-        if (!lookingAt.current.has(i.object)) {
-          lookingAt.current.add(i.object);
-          i.object.dispatchEvent({
-            target: i.object,
-            type: 'lookAtStart',
-            intersection: i
-          });
-        }
-      });
+    resp.forEach(i => {
+      if (!lookingAt.current.has(i.object)) {
+        lookingAt.current.add(i.object);
+        i.object.dispatchEvent({
+          target: i.object,
+          type: 'lookAtStart',
+          intersection: i
+        });
+      }
+    });
 
-      // console.log(lookingAt.current.map(i => i.object.name));
-      // console.log(resp);
-    }
-  });
+    // console.log(lookingAt.current.map(i => i.object.name));
+    // console.log(resp);
+  }, 5);
 
   return null;
 }

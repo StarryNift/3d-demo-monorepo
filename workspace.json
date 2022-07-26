@@ -4,6 +4,7 @@
   "projects": {
     "character-state": "libs/character-state",
     "dynamic-scene": "libs/dynamic-scene",
+    "hooks": "libs/hooks",
     "physic-material": "libs/physic-material",
     "r3f-demo": "apps/r3f-demo",
     "text-sprite": "libs/text-sprite",

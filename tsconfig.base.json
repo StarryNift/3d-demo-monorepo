@@ -17,6 +17,7 @@
     "paths": {
       "@3d/character-state": ["libs/character-state/src/index.ts"],
       "@3d/dynamic-scene": ["libs/dynamic-scene/src/index.ts"],
+      "@3d/hooks": ["libs/hooks/src/index.ts"],
       "@3d/physic-material": ["libs/physic-material/src/index.ts"],
       "@3d/text-sprite": ["libs/text-sprite/src/index.ts"],
       "@3d/third-person-controls": ["libs/third-person-controls/src/index.ts"]
