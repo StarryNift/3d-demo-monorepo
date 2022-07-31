@@ -170,13 +170,17 @@ export default function LookAt() {
       >
         <ambientLight />
         <pointLight position={[10, 10, 10]} />
+        {/* in case converting to left-hand system */}
+        {/* <group scale={[-1, 1, 1]}> */}
         {/* <Box name="floor" args={[100, 100, 2]} rotation-x={-Math.PI / 2} /> */}
         <Box name="boxA" args={[1, 1, 1]} position={[10, 4, -10]} />
         <Box name="💬..." args={[1, 1, 1]} position={[5, -2, -1]} />
         <Box name="方块" args={[1, 1, 1]} position={[0, 0, 0]} />
         <Sphere name="sphere" args={[1]} position={[-5, 1, -5]} />
+        {/* x, y, z axis are colored in Red, Green, Blue (rgb) */}
         <axesHelper args={[10]} />
         <gridHelper args={[100, 100]} />
+        {/* </group> */}
         <OrbitControls />
         <Helper />
       </Canvas>
