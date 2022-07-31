@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { ProxyEvent } from './events/event-handler-store';
 import { useEventHandlerStore } from './events/event-handler-store';
-import { Model } from './model';
+import { FBXModel, GLTFModel } from './model';
 import { ManifestJson } from './types/manifest';
 
 export interface SceneProps {
@@ -31,15 +31,29 @@ export function DynamicScene({
 
   return (
     <>
-      {manifest.models.map(model => (
-        <Model
-          key={model.name}
-          castShadow={castShadow}
-          receiveShadow={receiveShadow}
-          debug={debug}
-          manifest={model}
-        />
-      ))}
+      {manifest.models.map(model => {
+        if (model.name.endsWith('fbx')) {
+          return (
+            <FBXModel
+              key={model.name}
+              castShadow={castShadow}
+              receiveShadow={receiveShadow}
+              debug={debug}
+              manifest={model}
+            />
+          );
+        } else {
+          return (
+            <GLTFModel
+              key={model.name}
+              castShadow={castShadow}
+              receiveShadow={receiveShadow}
+              debug={debug}
+              manifest={model}
+            />
+          );
+        }
+      })}
     </>
   );
 }

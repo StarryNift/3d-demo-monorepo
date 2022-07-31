@@ -1,0 +1,108 @@
+{
+  "models": [
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/ship3/zhenghe3.FBX",
+      "name": "zhenghe3.fbx",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ]
+    },
+    {
+      "src": "https://d1uoymq29mtp9f.cloudfront.net/web/3D/ship/justCollider.glb",
+      "name": "justCollider.glb",
+      "transforms": [
+        {
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "scale": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "quaternion": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "physics": [
+        {
+          "bodyType": "Trimesh",
+          "node": "dc_diji_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "sc_diban_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "sc_luoxuanjiang_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "xc_diban_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "xc_qiang_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "xc_wujian_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "zc_diban_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "zc_qiang_collider",
+          "material": "wall",
+          "render": false
+        },
+        {
+          "bodyType": "Trimesh",
+          "node": "zc_wujian_collider",
+          "material": "wall",
+          "render": false
+        }
+      ]
+    }
+  ]
+}

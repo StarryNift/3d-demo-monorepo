@@ -1,4 +1,4 @@
-import { useAnimations, useGLTF } from '@react-three/drei';
+import { useAnimations, useFBX, useGLTF } from '@react-three/drei';
 import { isArray } from 'lodash';
 import { memo, useEffect, useMemo, useRef } from 'react';
 import type { Group, Mesh, MeshStandardMaterial, Object3D } from 'three';
@@ -35,18 +35,11 @@ function isMesh(node?: Object3D): node is Mesh {
 //   console.log(`Click on model: ${props.manifest.src}`, event, ref?.current);
 // };
 
-export const Model = memo((props: ModelProps) => {
-  const { src, name, transforms } = props.manifest;
-  const { scene, nodes, animations } = useGLTF(src) as GLTFModel;
-
-  const ref = useRef<Group>(null);
-
-  const { position, quaternion, scale } = transforms[0];
-
+export function patchScene(scene: Group, props: ModelProps) {
   const addModel = useSceneMesh(state => state.addModel);
   const addCollider = useSceneMesh(state => state.addCollider);
 
-  const [colliders] = useMemo(() => {
+  const { colliders } = useMemo(() => {
     // Can not animate if using a cloned scene
     const meshes: Record<string, Mesh> = {};
 
@@ -61,7 +54,7 @@ export const Model = memo((props: ModelProps) => {
     });
 
     // Store references of meshes in store for later use
-    addModel(name, meshes);
+    addModel(props.manifest.name, meshes);
 
     const colliders: Record<
       string,
@@ -72,12 +65,6 @@ export const Model = memo((props: ModelProps) => {
       props.manifest.physics.forEach(colliderDescriptor => {
         const match = scene.getObjectByName(colliderDescriptor.node);
 
-        console.log(
-          'collider',
-          colliderDescriptor,
-          match,
-          nodes[colliderDescriptor.node]
-        );
         if (match) {
           if (!isMesh(match)) {
             return console.error(
@@ -104,10 +91,23 @@ export const Model = memo((props: ModelProps) => {
       });
     }
 
-    return [colliders];
+    return { colliders };
   }, [scene]);
 
+  return { colliders };
+}
+
+export const GLTFModel = memo((props: ModelProps) => {
+  const { src, transforms } = props.manifest;
+  const { scene, animations } = useGLTF(src) as GLTFModel;
+
+  const ref = useRef<Group>(null);
+
+  const { position, quaternion, scale } = transforms[0];
+
   const animation = useAnimations(animations, ref);
+
+  const { colliders } = patchScene(scene, props);
 
   useEffect(() => {
     // Play default animation
@@ -124,6 +124,87 @@ export const Model = memo((props: ModelProps) => {
       }
     }
   }, []);
+
+  const handlers = useMemo(
+    () =>
+      props.manifest.events ? composeEventHandlers(props.manifest.events) : {},
+    [props.manifest]
+  );
+
+  console.log('sceneFiltered', props.manifest.src, scene, colliders);
+
+  return (
+    <>
+      <group
+        ref={ref}
+        position={[position.x, position.y, position.z]}
+        quaternion={[quaternion.x, quaternion.y, quaternion.z, quaternion.w]}
+        // {...(props.debug ? { onClick: e => handleDebug(e, props, ref) } : {})}
+        {...handlers}
+        scale={[scale.x, scale.y, scale.z]}
+      >
+        <primitive object={scene} dispose={null} />
+      </group>
+      {Object.keys(colliders).map(key => {
+        const collider = colliders[key];
+
+        switch (collider.physics.bodyType) {
+          case 'ConvexPolyhedron':
+            return (
+              <ConvexPolyhedronCollider
+                key={collider.mesh.uuid}
+                node={collider.mesh}
+                physics={collider.physics}
+                parentTransform={{
+                  position: { x: position.x, y: position.y, z: position.z },
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w
+                  },
+                  scale
+                }}
+              />
+            );
+          case 'Trimesh':
+            return (
+              <TrimeshCollider
+                key={collider.mesh.uuid}
+                node={collider.mesh}
+                physics={collider.physics}
+                parentTransform={{
+                  position: { x: position.x, y: position.y, z: position.z },
+                  quaternion: {
+                    x: quaternion.x,
+                    y: quaternion.y,
+                    z: quaternion.z,
+                    w: quaternion.w
+                  },
+                  scale
+                }}
+              />
+            );
+          default:
+            console.error(
+              `Unknown body type of ${collider.mesh.name}: ${collider.physics.bodyType}`
+            );
+            return null;
+        }
+      })}
+    </>
+  );
+}, shallow);
+
+export const FBXModel = memo((props: ModelProps) => {
+  const { src, transforms } = props.manifest;
+  const scene = useFBX(src);
+
+  const ref = useRef<Group>(null);
+
+  const { position, quaternion, scale } = transforms[0];
+
+  const { colliders } = patchScene(scene, props);
 
   const handlers = useMemo(
     () =>
